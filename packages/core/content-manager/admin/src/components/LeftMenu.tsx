@@ -139,10 +139,6 @@ const LeftMenu = () => {
                     key={link.uid}
                     to={{
                       pathname: link.to,
-                      search: stringify({
-                        ...parse(link.search ?? ''),
-                        plugins: getPluginsParamsForLink(link),
-                      }),
                     }}
                     label={link.title}
                   />

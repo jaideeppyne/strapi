@@ -42,6 +42,7 @@ import {
   convertListLayoutToFieldLayouts,
   useDocumentLayout,
 } from '../../hooks/useDocumentLayout';
+import { usePersistentQueryParams } from '../../hooks/usePersistentQueryParams';
 import { usePrev } from '../../hooks/usePrev';
 import { useGetAllDocumentsQuery } from '../../services/documents';
 import { buildValidParams } from '../../utils/api';
@@ -72,6 +73,8 @@ const ListViewPage = () => {
   const { formatMessage } = useIntl();
   const { toggleNotification } = useNotification();
   const { _unstableFormatAPIError: formatAPIError } = useAPIErrorHandler(getTranslation);
+
+  usePersistentQueryParams();
 
   const { collectionType, model, schema } = useDoc();
   const { list } = useDocumentLayout(model);
