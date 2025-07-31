@@ -43,6 +43,7 @@ import {
   useDocumentLayout,
 } from '../../hooks/useDocumentLayout';
 import { usePersistentQueryParams } from '../../hooks/usePersistentQueryParams';
+import { usePersistentState } from '../../hooks/usePersistentState';
 import { usePrev } from '../../hooks/usePrev';
 import { useGetAllDocumentsQuery } from '../../services/documents';
 import { buildValidParams } from '../../utils/api';
@@ -79,18 +80,11 @@ const ListViewPage = () => {
   const { collectionType, model, schema } = useDoc();
   const { list } = useDocumentLayout(model);
 
-  const [displayedHeaders, setDisplayedHeaders] = React.useState<ListFieldLayout[]>([]);
-
-  const listLayout = usePrev(list.layout);
-  React.useEffect(() => {
-    /**
-     * ONLY update the displayedHeaders if the document
-     * layout has actually changed in value.
-     */
-    if (!isEqual(listLayout, list.layout)) {
-      setDisplayedHeaders(list.layout);
-    }
-  }, [list.layout, listLayout]);
+  const [displayedHeaders, setDisplayedHeaders] = usePersistentState<ListFieldLayout[]>(
+    'list-view-settings',
+    model,
+    list.layout
+  );
 
   const handleSetHeaders = (headers: string[]) => {
     setDisplayedHeaders(
