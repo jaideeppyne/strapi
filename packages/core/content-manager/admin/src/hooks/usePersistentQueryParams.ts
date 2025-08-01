@@ -1,40 +1,49 @@
+import { useQueryParams } from '@strapi/admin/strapi-admin';
 import { useEffect } from 'react';
 
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-const getQueryParams = (search: string) => {
-  return new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
-};
+const filterObjectKeys = (obj: object, keys: string[]) => {
+  return keys.reduce((prev, curr) => {
+    if (Object.prototype.hasOwnProperty.call(obj, curr)) {
+      return {
+        ...prev,
+        // @ts-expect-error – this is fine, if you want to fix it, please do.
+        [curr]: obj[curr]
+      }
+    }
 
-export const usePersistentQueryParams = () => {
-  const { pathname, search } = useLocation();
-  const navigate = useNavigate();
+    return prev;
+  }, {} as Record<string, unknown>)
+}
+
+export const usePersistentParitalQueryParams = (keysToPersist: string[]) => {
+  const { pathname } = useLocation();
+  const [{ query }, setQuery] = useQueryParams();
   const localStorageKey = `strapi-query-params:${pathname}`;
 
+  // load query params from local storge
   useEffect(() => {
-    const currentParams = getQueryParams(search);
-    const hasCurrentParams = currentParams && currentParams.size > 0;
-
     const savedQueryParams = window.localStorage.getItem(localStorageKey);
+    if (!savedQueryParams) return;
 
-    if (!hasCurrentParams && savedQueryParams !== null) {
-      // No query params in the URL – check localStorage
-      const savedParams = getQueryParams(savedQueryParams);
-      if (savedParams && savedParams.size > 0) {
-        navigate(
-          {
-            pathname,
-            search: savedQueryParams,
-          },
-          {
-            replace: true,
-          }
-        );
-      }
-    } else if (hasCurrentParams) {
-      // Save current query params
-      window.localStorage.setItem(localStorageKey, currentParams.toString());
+    let parsedSavedParams;
+    try {
+      parsedSavedParams = JSON.parse(savedQueryParams) as object;
+    } catch {
+      return;
     }
+    if (Object.keys(parsedSavedParams).length === 0) return;
+
+    const filteredQuery = filterObjectKeys(parsedSavedParams, keysToPersist);
+    setQuery({...query, ...filteredQuery}, "push", true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [localStorageKey, search]);
+  }, [localStorageKey]);
+
+  // update local storege
+  useEffect(() => {
+    const paramsToPersist = filterObjectKeys(query, keysToPersist);
+    if (Object.keys(paramsToPersist).length === 0) return;
+    window.localStorage.setItem(localStorageKey, JSON.stringify(paramsToPersist));
+  }, [query, keysToPersist]);
 };

@@ -11,6 +11,7 @@ import {
   useTracking,
   useAPIErrorHandler,
   useQueryParams,
+  usePersistentState,
   useRBAC,
   Layouts,
   useTable,
@@ -42,8 +43,7 @@ import {
   convertListLayoutToFieldLayouts,
   useDocumentLayout,
 } from '../../hooks/useDocumentLayout';
-import { usePersistentQueryParams } from '../../hooks/usePersistentQueryParams';
-import { usePersistentState } from '../../hooks/usePersistentState';
+import { usePersistentParitalQueryParams, usePersistentQueryParams } from '../../hooks/usePersistentQueryParams';
 import { usePrev } from '../../hooks/usePrev';
 import { useGetAllDocumentsQuery } from '../../services/documents';
 import { buildValidParams } from '../../utils/api';
@@ -75,16 +75,29 @@ const ListViewPage = () => {
   const { toggleNotification } = useNotification();
   const { _unstableFormatAPIError: formatAPIError } = useAPIErrorHandler(getTranslation);
 
-  usePersistentQueryParams();
+  usePersistentParitalQueryParams(["sort", "filters", "pageSize"]);
 
   const { collectionType, model, schema } = useDoc();
   const { list } = useDocumentLayout(model);
 
   const [displayedHeaders, setDisplayedHeaders] = usePersistentState<ListFieldLayout[]>(
-    'list-view-settings',
-    model,
-    list.layout
+    `list-view-settings:${model}`,
+    []
   );
+
+  /**
+    * If the persistant displayedHeaders are not yet initialized, set them to list.layout
+    */
+  React.useEffect(() => {
+    // wait for list.layout to be loaded
+    if (list.layout.length === 0) {
+      return;
+    }
+
+    if (displayedHeaders.length === 0) {
+      setDisplayedHeaders(list.layout);
+    }
+  }, [list.layout]);
 
   const handleSetHeaders = (headers: string[]) => {
     setDisplayedHeaders(
