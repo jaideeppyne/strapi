@@ -20,10 +20,10 @@ const filterObjectKeys = (obj: object, keys: string[]) => {
   );
 };
 
-export const usePersistentPartialQueryParams = (keysToPersist: string[]) => {
+export const usePersistentPartialQueryParams = (keyPrefix: string, keysToPersist: string[]) => {
   const { pathname } = useLocation();
   const [{ query }, setQuery] = useQueryParams();
-  const localStorageKey = `strapi-query-params:${pathname}`;
+  const localStorageKey = `${keyPrefix}${pathname}`;
 
   // load query params from local storge
   useEffect(() => {

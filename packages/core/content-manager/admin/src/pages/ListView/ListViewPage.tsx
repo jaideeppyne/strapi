@@ -75,13 +75,13 @@ const ListViewPage = () => {
   const { toggleNotification } = useNotification();
   const { _unstableFormatAPIError: formatAPIError } = useAPIErrorHandler(getTranslation);
 
-  usePersistentPartialQueryParams(['sort', 'filters', 'pageSize']);
+  usePersistentPartialQueryParams('STRAPI_LIST_VIEW_SETTINGS:', ['sort', 'filters', 'pageSize']);
 
   const { collectionType, model, schema } = useDoc();
   const { list } = useDocumentLayout(model);
 
   const [displayedHeaders, setDisplayedHeaders] = usePersistentState<ListFieldLayout[]>(
-    `list-view-settings:${model}`,
+    `STRAPI_LIST_VIEW_DISPLAY_HEADERS:${model}`,
     []
   );
 
