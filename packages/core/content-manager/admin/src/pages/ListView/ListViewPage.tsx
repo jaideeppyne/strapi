@@ -43,7 +43,7 @@ import {
   convertListLayoutToFieldLayouts,
   useDocumentLayout,
 } from '../../hooks/useDocumentLayout';
-import { usePersistentParitalQueryParams, usePersistentQueryParams } from '../../hooks/usePersistentQueryParams';
+import { usePersistentPartialQueryParams } from '../../hooks/usePersistentQueryParams';
 import { usePrev } from '../../hooks/usePrev';
 import { useGetAllDocumentsQuery } from '../../services/documents';
 import { buildValidParams } from '../../utils/api';
@@ -75,7 +75,7 @@ const ListViewPage = () => {
   const { toggleNotification } = useNotification();
   const { _unstableFormatAPIError: formatAPIError } = useAPIErrorHandler(getTranslation);
 
-  usePersistentParitalQueryParams(["sort", "filters", "pageSize"]);
+  usePersistentPartialQueryParams(['sort', 'filters', 'pageSize']);
 
   const { collectionType, model, schema } = useDoc();
   const { list } = useDocumentLayout(model);
@@ -86,8 +86,8 @@ const ListViewPage = () => {
   );
 
   /**
-    * If the persistant displayedHeaders are not yet initialized, set them to list.layout
-    */
+   * If the persistent displayedHeaders are not yet initialized, set them to list.layout
+   */
   React.useEffect(() => {
     // wait for list.layout to be loaded
     if (list.layout.length === 0) {
