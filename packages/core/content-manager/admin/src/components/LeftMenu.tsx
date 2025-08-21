@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { useQueryParams, SubNav } from '@strapi/admin/strapi-admin';
-import { Divider, Flex, Searchbar, useCollator, useFilter } from '@strapi/design-system';
+import { useQueryParams, SubNav, useSubNav } from '@strapi/admin/strapi-admin';
+import { Flex, Searchbar, useCollator, useFilter } from '@strapi/design-system';
 import { parse, stringify } from 'qs';
 import { useIntl } from 'react-intl';
 
@@ -15,7 +15,7 @@ const LeftMenu = () => {
   const [search, setSearch] = React.useState('');
   const [{ query }] = useQueryParams<{ plugins?: object }>();
   const { formatMessage, locale } = useIntl();
-
+  const { closeSideNav } = useSubNav();
   const collectionTypeLinks = useTypedSelector(
     (state) => state['content-manager'].app.collectionTypeLinks
   );
@@ -113,7 +113,6 @@ const LeftMenu = () => {
   return (
     <SubNav.Main aria-label={label}>
       <SubNav.Header label={label} />
-      <Divider background="neutral150" />
       <Flex padding={5} gap={3} direction={'column'} alignItems={'stretch'}>
         <Searchbar
           value={search}
@@ -146,6 +145,7 @@ const LeftMenu = () => {
                       }),
                     }}
                     label={link.title}
+                    onClick={closeSideNav}
                   />
                 );
               })}
