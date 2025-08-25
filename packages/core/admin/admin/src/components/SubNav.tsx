@@ -94,22 +94,27 @@ const Link = (
   );
 };
 
+const CloseButton = styled(IconButton)`
+  display: block;
+
+  ${({ theme }) => theme.breakpoints.medium} {
+    display: none;
+  }
+`;
+
 const Header = ({ label }: { label: string }) => {
   const { closeSideNav } = useSubNav();
   return (
     <SubNavHeader
       label={label}
       additionalAction={
-        <Box
-          display={{
-            initial: 'block',
-            medium: 'none',
-          }}
+        <CloseButton
+          onClick={closeSideNav}
+          label="Close side navigation" // TODO: translate
+          type="button"
         >
-          <IconButton label="Close subnav" onClick={closeSideNav}>
-            <Cross />
-          </IconButton>
-        </Box>
+          <Cross display="block" />
+        </CloseButton>
       }
     />
   );
@@ -293,11 +298,4 @@ const SubSection = ({ label, children }: { label: string; children: React.ReactN
   );
 };
 
-export const SubNav = {
-  Main,
-  Header,
-  Link,
-  Sections,
-  Section,
-  SubSection,
-};
+export { Main, Header, Link, Sections, Section, SubSection };

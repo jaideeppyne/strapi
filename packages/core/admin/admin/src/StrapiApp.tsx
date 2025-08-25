@@ -395,7 +395,7 @@ class StrapiApp {
 
   async loadAdminTrads() {
     const adminLocales = await Promise.all(
-      this.configurations.locales.map(async (locale) => {
+      this.configurations.locales.map(async (locale: string) => {
         try {
           const { default: data } = await import(`./translations/${locale}.js`);
 
@@ -462,7 +462,7 @@ class StrapiApp {
 
     const translations = this.configurations.locales.reduce<{
       [locale: string]: Translation['data'];
-    }>((acc, current) => {
+    }>((acc: { [locale: string]: Translation['data'] }, current: string) => {
       acc[current] = {
         ...adminTranslations[current],
         ...(mergedTrads[current] || {}),
