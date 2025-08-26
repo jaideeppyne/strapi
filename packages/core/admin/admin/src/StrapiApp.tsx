@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { darkTheme, lightTheme } from '@strapi/design-system';
+import { darkTheme, lightTheme, type StrapiTheme } from '@strapi/design-system';
 import { Clock, User, TrendUp } from '@strapi/icons';
 import invariant from 'invariant';
 import isFunction from 'lodash/isFunction';
@@ -46,7 +46,7 @@ interface StrapiAppConstructorArgs extends Partial<Pick<StrapiApp, 'appPlugins'>
     locales?: string[];
     menu?: { logo: string };
     notifications?: { releases: boolean };
-    theme?: { light: DefaultTheme; dark: DefaultTheme };
+    theme?: { light: StrapiTheme; dark: StrapiTheme };
     translations?: Record<string, Record<string, string>>;
     tutorials?: boolean;
   };
@@ -105,7 +105,7 @@ class StrapiApp {
     locales: ['en'],
     menuLogo: Logo,
     notifications: { releases: true },
-    themes: { light: lightTheme, dark: darkTheme },
+    themes: { light: lightTheme as StrapiTheme, dark: darkTheme as StrapiTheme },
     translations: {},
     tutorials: true,
   };

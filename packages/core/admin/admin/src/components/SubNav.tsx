@@ -298,4 +298,11 @@ const SubSection = ({ label, children }: { label: string; children: React.ReactN
   );
 };
 
-export { Main, Header, Link, Sections, Section, SubSection };
+export const SubNav = {
+  Main,
+  Header,
+  Link,
+  Sections,
+  Section,
+  SubSection,
+};
