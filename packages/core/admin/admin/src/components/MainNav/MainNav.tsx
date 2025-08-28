@@ -15,7 +15,7 @@ const MainNavWrapper = styled(Flex)<{ $isMobileShown: boolean }>`
   }
 `;
 
-const MainNav = (props: FlexProps<'nav'> & { isMobileShown: boolean }) => (
+const MainNav = ({ isMobileShown, ...props }: FlexProps<'nav'> & { isMobileShown: boolean }) => (
   <MainNavWrapper
     alignItems="normal"
     tag="nav"
@@ -30,7 +30,7 @@ const MainNav = (props: FlexProps<'nav'> & { isMobileShown: boolean }) => (
       initial: '100%',
       large: 10,
     }}
-    $isMobileShown={props.isMobileShown}
+    $isMobileShown={isMobileShown}
     {...props}
   />
 );

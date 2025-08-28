@@ -8,9 +8,12 @@ import {
   useFilter,
   SubNavSections,
   SubNavSection,
+  SubNavLink,
+  SubNav as DSSubNav,
 } from '@strapi/design-system';
 import { parse, stringify } from 'qs';
 import { useIntl } from 'react-intl';
+import { NavLink, useLocation } from 'react-router-dom';
 
 import { useContentTypeSchema } from '../hooks/useContentTypeSchema';
 import { useTypedSelector } from '../modules/hooks';
@@ -118,7 +121,7 @@ const LeftMenu = () => {
   };
 
   return (
-    <SubNav.Main aria-label={label}>
+    <DSSubNav aria-label={label}>
       <SubNav.Header label={label} />
       <Flex
         paddingTop={5}
@@ -150,7 +153,8 @@ const LeftMenu = () => {
             <SubNavSection key={section.id} label={section.title}>
               {section.links.map((link) => {
                 return (
-                  <SubNav.Link
+                  <SubNavLink
+                    tag={NavLink}
                     key={link.uid}
                     to={{
                       pathname: link.to,
@@ -159,16 +163,17 @@ const LeftMenu = () => {
                         plugins: getPluginsParamsForLink(link),
                       }),
                     }}
-                    label={link.title}
                     onClick={closeSideNav}
-                  />
+                  >
+                    {link.title}
+                  </SubNavLink>
                 );
               })}
             </SubNavSection>
           );
         })}
       </SubNavSections>
-    </SubNav.Main>
+    </DSSubNav>
   );
 };
 
