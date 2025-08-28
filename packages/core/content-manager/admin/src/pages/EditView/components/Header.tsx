@@ -64,6 +64,10 @@ const Header = ({ isCreating, status, title: documentTitle = 'Untitled' }: Heade
       })
     : documentTitle;
 
+  const statusComponent = React.useMemo(() => {
+    return status ? <DocumentStatus status={isCloning ? 'draft' : status} /> : null;
+  }, [isCloning, status]);
+
   return (
     <Flex direction="column" alignItems="flex-start" paddingTop={6} paddingBottom={4} gap={2}>
       <BackButton
@@ -83,13 +87,11 @@ const Header = ({ isCreating, status, title: documentTitle = 'Untitled' }: Heade
         <Typography variant="alpha" tag="h1" paddingRight={4}>
           {title}
         </Typography>
-        <HeaderToolbar />
+        <HeaderToolbar mobileStatus={statusComponent} />
       </Flex>
-      {status ? (
-        <Box marginTop={1}>
-          <DocumentStatus status={isCloning ? 'draft' : status} />
-        </Box>
-      ) : null}
+      <Box marginTop={1} display={{ initial: 'none', large: 'block' }}>
+        {statusComponent}
+      </Box>
     </Flex>
   );
 };
@@ -128,7 +130,7 @@ interface HeaderActionDescription {
  * @description Contains the document actions that have `position: header`, if there are
  * none we still render the menu because we render the information about the document there.
  */
-const HeaderToolbar = () => {
+const HeaderToolbar = ({ mobileStatus }: { mobileStatus?: React.ReactNode }) => {
   const { formatMessage } = useIntl();
   const isCloning = useMatch(CLONE_PATH) !== null;
   const [
@@ -140,7 +142,14 @@ const HeaderToolbar = () => {
   const plugins = useStrapiApp('HeaderToolbar', (state) => state.plugins);
 
   return (
-    <Flex gap={2} paddingTop={2} paddingBottom={2}>
+    <Flex
+      gap={2}
+      paddingTop={2}
+      paddingBottom={2}
+      justifyContent="space-between"
+      width={{ initial: '100%', large: 'auto' }}
+    >
+      <Box display={{ initial: 'block', large: 'none' }}>{mobileStatus}</Box>
       <DescriptionComponentRenderer
         props={{
           activeTab: status,

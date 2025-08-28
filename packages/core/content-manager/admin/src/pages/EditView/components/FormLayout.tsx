@@ -34,7 +34,10 @@ export const ResponsiveGridItem =
       `;
 
 const panelStyles = {
-  padding: 6,
+  padding: {
+    initial: 4,
+    medium: 6,
+  },
   borderColor: 'neutral150',
   background: 'neutral0',
   hasRadius: true,
@@ -60,7 +63,14 @@ const FormLayout = ({ layout, document, hasBackground = true }: FormLayoutProps)
   };
 
   return (
-    <Flex direction="column" alignItems="stretch" gap={6}>
+    <Flex
+      direction="column"
+      alignItems="stretch"
+      gap={{
+        initial: 4,
+        large: 6,
+      }}
+    >
       {layout.map((panel, index) => {
         if (panel.some((row) => row.some((field) => field.type === 'dynamiczone'))) {
           const [row] = panel;
@@ -90,7 +100,14 @@ const FormLayout = ({ layout, document, hasBackground = true }: FormLayoutProps)
 
         return (
           <Box key={index} {...(hasBackground && panelStyles)}>
-            <Flex direction="column" alignItems="stretch" gap={6}>
+            <Flex
+              direction="column"
+              alignItems="stretch"
+              gap={{
+                initial: 4,
+                large: 6,
+              }}
+            >
               {panel.map((row, gridRowIndex) => {
                 const visibleFields = row.filter(({ name }) => {
                   const attribute = document.schema?.attributes[name];

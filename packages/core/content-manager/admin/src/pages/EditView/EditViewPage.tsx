@@ -32,6 +32,21 @@ import { handleInvisibleAttributes } from './utils/data';
 /* -------------------------------------------------------------------------------------------------
  * EditViewPage
  * -----------------------------------------------------------------------------------------------*/
+const FormContainer = styled(Grid.Item)`
+  order: 1;
+
+  ${({ theme }) => theme.breakpoints.medium} {
+    order: 0;
+  }
+`;
+
+const ActionsContainer = styled(Grid.Item)`
+  order: 0;
+
+  ${({ theme }) => theme.breakpoints.medium} {
+    order: 1;
+  }
+`;
 
 const EditViewPage = () => {
   const location = useLocation();
@@ -204,8 +219,15 @@ const EditViewPage = () => {
                 </>
               ) : null}
             </Tabs.List>
-            <Grid.Root paddingTop={8} gap={4}>
-              <Grid.Item col={9} s={12} direction="column" alignItems="stretch">
+            <Grid.Root
+              paddingTop={{
+                initial: 2,
+                medium: 4,
+                large: 8,
+              }}
+              gap={4}
+            >
+              <FormContainer col={9} s={12} direction="column" alignItems="stretch">
                 <Tabs.Content value="draft">
                   <tours.contentManager.Fields>
                     <Box />
@@ -215,10 +237,10 @@ const EditViewPage = () => {
                 <Tabs.Content value="published">
                   <FormLayout layout={layout} document={doc} />
                 </Tabs.Content>
-              </Grid.Item>
-              <Grid.Item col={3} s={12} direction="column" alignItems="stretch">
+              </FormContainer>
+              <ActionsContainer col={3} s={12} direction="column" alignItems="stretch">
                 <Panels />
-              </Grid.Item>
+              </ActionsContainer>
             </Grid.Root>
           </Tabs.Root>
           <Blocker />
