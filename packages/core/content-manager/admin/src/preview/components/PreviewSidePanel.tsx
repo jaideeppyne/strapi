@@ -66,6 +66,7 @@ const PreviewSidePanel: PanelComponent = ({ model, documentId, document }) => {
   // So we encourage the user to set it up.
   if (error && error.name === 'NotFoundError') {
     return {
+      type: 'preview',
       title,
       content: (
         <Button
@@ -96,6 +97,7 @@ const PreviewSidePanel: PanelComponent = ({ model, documentId, document }) => {
   };
 
   return {
+    type: 'preview',
     title,
     content: (
       <ConditionalTooltip

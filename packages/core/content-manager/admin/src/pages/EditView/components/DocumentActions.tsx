@@ -20,6 +20,7 @@ import {
   VisuallyHidden,
   Menu,
   ButtonProps,
+  Box,
 } from '@strapi/design-system';
 import { Cross, More, WarningCircle } from '@strapi/icons';
 import mapValues from 'lodash/fp/mapValues';
@@ -28,6 +29,7 @@ import merge from 'lodash/merge';
 import set from 'lodash/set';
 import { useIntl } from 'react-intl';
 import { useMatch, useNavigate, useParams } from 'react-router-dom';
+import { styled } from 'styled-components';
 
 import { Create, Publish } from '../../../../../shared/contracts/collection-types';
 import { PUBLISHED_AT_ATTRIBUTE_NAME } from '../../../constants/attributes';
@@ -178,42 +180,51 @@ const DocumentActions = ({ actions }: DocumentActionsProps) => {
     return null;
   }
 
-  return (
-    <Flex direction="column" gap={2} alignItems="stretch" width="100%">
-      <tours.contentManager.Publish>
-        <Flex gap={2}>
-          {primaryAction.label === 'Publish' ? (
-            <DocumentActionButton {...primaryAction} variant={primaryAction.variant || 'default'} />
-          ) : (
-            <DocumentActionButton {...primaryAction} variant={primaryAction.variant || 'default'} />
-          )}
+  const documentRestActions =
+    restActions.length > 0 ? (
+      <DocumentActionsMenu
+        actions={restActions}
+        label={formatMessage({
+          id: 'content-manager.containers.edit.panels.default.more-actions',
+          defaultMessage: 'More document actions',
+        })}
+      />
+    ) : null;
 
-          {restActions.length > 0 ? (
-            <DocumentActionsMenu
-              actions={restActions}
-              label={formatMessage({
-                id: 'content-manager.containers.edit.panels.default.more-actions',
-                defaultMessage: 'More document actions',
-              })}
-            />
-          ) : null}
+  return (
+    <Flex
+      direction={{
+        initial: 'row',
+        large: 'column',
+      }}
+      gap={2}
+      alignItems="stretch"
+      width="100%"
+    >
+      <tours.contentManager.Publish>
+        <Flex flex={1} gap={2}>
+          <DocumentActionButton {...primaryAction} variant={primaryAction.variant || 'default'} />
+          <Box display={{ initial: 'none', large: 'block' }}>{documentRestActions}</Box>
         </Flex>
       </tours.contentManager.Publish>
       {secondaryAction ? (
-        secondaryAction.label === 'Publish' ? (
-          <tours.contentManager.Publish>
+        <Flex flex={1} gap={2}>
+          {secondaryAction.label === 'Publish' ? (
+            <tours.contentManager.Publish>
+              <DocumentActionButton
+                {...secondaryAction}
+                variant={secondaryAction.variant || 'secondary'}
+              />
+            </tours.contentManager.Publish>
+          ) : (
             <DocumentActionButton
               {...secondaryAction}
               variant={secondaryAction.variant || 'secondary'}
             />
-          </tours.contentManager.Publish>
-        ) : (
-          <DocumentActionButton
-            {...secondaryAction}
-            variant={secondaryAction.variant || 'secondary'}
-          />
-        )
+          )}
+        </Flex>
       ) : null}
+      <Box display={{ initial: 'block', large: 'none' }}>{documentRestActions}</Box>
     </Flex>
   );
 };

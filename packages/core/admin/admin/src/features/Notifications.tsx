@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Alert, AlertVariant, Flex, useCallbackRef, Link } from '@strapi/design-system';
+import { Alert, AlertVariant, Flex, useCallbackRef, Link, Box } from '@strapi/design-system';
 import { useIntl } from 'react-intl';
 
 interface NotificationLink {
@@ -83,22 +83,21 @@ const NotificationsProvider = ({ children }: NotificationsProviderProps) => {
     <NotificationsContext.Provider value={value}>
       <Flex
         left="50%"
-        marginLeft="-250px"
+        transform="translateX(-50%)"
         position="fixed"
         direction="column"
         alignItems="stretch"
         gap={2}
-        top={`4.6rem`}
-        width={`50rem`}
+        top={`5.6rem`}
+        width="100%"
+        maxWidth={`50rem`}
         zIndex="notification"
       >
         {notifications.map((notification) => {
           return (
-            <Notification
-              key={notification.id}
-              {...notification}
-              clearNotification={clearNotification}
-            />
+            <Box key={notification.id} margin={4}>
+              <Notification {...notification} clearNotification={clearNotification} />
+            </Box>
           );
         })}
       </Flex>

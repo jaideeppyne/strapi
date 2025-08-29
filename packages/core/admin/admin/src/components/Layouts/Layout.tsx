@@ -18,6 +18,8 @@ const GridContainer = styled(Box)<{ $hasSideNav: boolean; $isSideNavMobileVisibl
   max-width: 100%;
   display: grid;
   grid-template-columns: 1fr;
+  overflow: hidden;
+  height: 100vh;
 
   ${({ theme }) => theme.breakpoints.medium} {
     grid-template-columns: ${({ $hasSideNav }) => ($hasSideNav ? `auto 1fr` : '1fr')};
@@ -39,6 +41,8 @@ const SideNavContainer = styled(Flex)<{ $isSideNavMobileVisible: boolean }>`
   transition: transform 0.3s ease-in-out;
 
   ${({ theme }) => theme.breakpoints.medium} {
+    top: 5.6rem;
+    height: calc(100vh - 5.6rem);
     position: sticky;
     width: auto;
     box-shadow: none;
@@ -46,16 +50,21 @@ const SideNavContainer = styled(Flex)<{ $isSideNavMobileVisible: boolean }>`
     border-top: 1px solid ${({ theme }) => theme.colors.neutral150};
   }
   ${({ theme }) => theme.breakpoints.large} {
+    top: 0;
     border-top: none;
   }
 `;
 
-const OverflowingItem = styled(Box)<{ $isSideNavMobileVisible: boolean }>`
+const OverflowingItem = styled(Box)`
   overflow-x: hidden;
+  padding-top: 5.6rem;
 
   ${({ theme }) => theme.breakpoints.medium} {
     transform: none;
     width: auto;
+  }
+  ${({ theme }) => theme.breakpoints.large} {
+    padding-top: 0;
   }
 `;
 
@@ -84,6 +93,16 @@ const RootLayout = ({ sideNav, sideNavLabel, children }: LayoutProps) => {
           <SideNavContainer $isSideNavMobileVisible={isSideNavMobileVisible}>
             {sideNav}
           </SideNavContainer>
+        </>
+      )}
+      <OverflowingItem
+        paddingBottom={{
+          initial: 4,
+          medium: 6,
+          large: 10,
+        }}
+      >
+        {sideNav && (
           <Box
             display={{
               initial: 'block',
@@ -104,16 +123,7 @@ const RootLayout = ({ sideNav, sideNavLabel, children }: LayoutProps) => {
                 (isSideNavMobileVisible ? 'Close Side navigation' : 'Open Side navigation')}
             </Button>
           </Box>
-        </>
-      )}
-      <OverflowingItem
-        paddingBottom={{
-          initial: 4,
-          medium: 6,
-          large: 10,
-        }}
-        $isSideNavMobileVisible={isSideNavMobileVisible}
-      >
+        )}
         {children}
       </OverflowingItem>
     </GridContainer>

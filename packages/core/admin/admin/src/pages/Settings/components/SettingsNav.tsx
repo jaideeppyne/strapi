@@ -1,11 +1,4 @@
-import {
-  Badge,
-  SubNavSections,
-  SubNavSection,
-  SubNavLink,
-  SubNav as DSSubNav,
-  Flex,
-} from '@strapi/design-system';
+import { Badge, SubNavSections, SubNavSection, SubNavLink, Flex } from '@strapi/design-system';
 import { Lightning } from '@strapi/icons';
 import { useIntl } from 'react-intl';
 import { useLocation, NavLink } from 'react-router-dom';
@@ -89,8 +82,7 @@ const SettingsNav = ({ menu }: SettingsNavProps) => {
   };
 
   return (
-    <DSSubNav aria-label={label}>
-      <SubNav.Header label={label} />
+    <SubNav.Main aria-label={label} header={<SubNav.Header label={label} />}>
       <SubNavSections>
         {sections.map((section) => (
           <SubNavSection key={section.id} label={formatMessage(section.intlLabel)}>
@@ -137,7 +129,7 @@ const SettingsNav = ({ menu }: SettingsNavProps) => {
           </SubNavSection>
         ))}
       </SubNavSections>
-    </DSSubNav>
+    </SubNav.Main>
   );
 };
 

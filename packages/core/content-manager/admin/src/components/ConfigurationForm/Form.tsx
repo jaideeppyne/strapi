@@ -8,7 +8,7 @@ import {
   BackButton,
   Layouts,
 } from '@strapi/admin/strapi-admin';
-import { Button, Divider, Flex, Grid, Main, Typography } from '@strapi/design-system';
+import { Box, Button, Divider, Flex, Grid, Main, Typography } from '@strapi/design-system';
 import { generateNKeysBetween } from 'fractional-indexing';
 import pipe from 'lodash/fp/pipe';
 import { useIntl } from 'react-intl';
@@ -84,7 +84,7 @@ const ConfigurationForm = ({
   }, [layout, settings]);
 
   return (
-    <Layouts.Root>
+    <>
       <Main>
         <Form initialValues={initialValues} onSubmit={onSubmit} method="PUT">
           <Header name={settings.displayName ?? ''} />
@@ -176,7 +176,7 @@ const ConfigurationForm = ({
           </Layouts.Content>
         </Form>
       </Main>
-    </Layouts.Root>
+    </>
   );
 };
 

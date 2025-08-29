@@ -15,7 +15,6 @@ import {
   SubNavSection,
   SubNavLink,
   SubNavLinkSection,
-  SubNav as DSSubNav,
 } from '@strapi/design-system';
 import { ArrowClockwise, Cross, More, Plus } from '@strapi/icons';
 import { useIntl } from 'react-intl';
@@ -126,8 +125,7 @@ export const ContentTypeBuilderNav = () => {
   });
 
   return (
-    <DSSubNav aria-label={pluginName}>
-      <SubNav.Header label={pluginName} />
+    <SubNav.Main aria-label={pluginName} header={<SubNav.Header label={pluginName} />}>
       <Flex
         paddingTop={5}
         paddingBottom={1}
@@ -322,6 +320,6 @@ export const ContentTypeBuilderNav = () => {
           })}
         </ConfirmDialog>
       </Dialog.Root>
-    </DSSubNav>
+    </SubNav.Main>
   );
 };

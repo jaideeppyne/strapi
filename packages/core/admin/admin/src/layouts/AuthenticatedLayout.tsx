@@ -27,14 +27,6 @@ import { hashAdminUserEmail } from '../utils/users';
 
 const { version: strapiVersion } = packageInfo;
 
-const ContentContainer = styled(Box)`
-  padding-top: 5.6rem;
-
-  ${({ theme }) => theme.breakpoints.large} {
-    padding-top: 0;
-  }
-`;
-
 const AdminLayout = () => {
   const { formatMessage } = useIntl();
   const userInfo = useAuth('AuthenticatedApp', (state) => state.user);
@@ -120,10 +112,10 @@ const AdminLayout = () => {
                 generalSectionLinks={generalSectionLinks}
                 pluginsSectionLinks={pluginsSectionLinks}
               />
-              <ContentContainer flex={1}>
+              <Box flex={1}>
                 <UpsellBanner />
                 <Outlet />
-              </ContentContainer>
+              </Box>
             </Flex>
           </Box>
         </DndProvider>

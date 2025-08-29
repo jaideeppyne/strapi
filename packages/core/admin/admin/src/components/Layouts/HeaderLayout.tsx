@@ -84,24 +84,26 @@ const BaseHeaderLayout = React.forwardRef<HTMLDivElement, BaseHeaderLayoutProps>
         }}
         paddingBottom={{
           initial: 4,
-          medium: 8,
+          large: 8,
         }}
         paddingTop={{
           initial: 4,
-          medium: navigationAction ? 6 : 8,
+          large: navigationAction ? 6 : 8,
         }}
         background="neutral100"
         data-strapi-header
       >
-        {navigationAction ? <Box paddingBottom={2}>{navigationAction}</Box> : null}
-        <Flex justifyContent="space-between" wrap="wrap" gap={2}>
-          <Flex minWidth={0}>
-            <Typography tag="h1" variant="alpha" {...props}>
-              {title}
-            </Typography>
-            {secondaryAction ? <Box paddingLeft={4}>{secondaryAction}</Box> : null}
+        <Flex direction="column" alignItems="flex-start" gap={2}>
+          {navigationAction}
+          <Flex justifyContent="space-between" wrap="wrap" gap={2}>
+            <Flex minWidth={0}>
+              <Typography tag="h1" variant="alpha" {...props}>
+                {title}
+              </Typography>
+              {secondaryAction ? <Box paddingLeft={4}>{secondaryAction}</Box> : null}
+            </Flex>
+            {primaryAction}
           </Flex>
-          {primaryAction}
         </Flex>
         {isSubtitleString ? (
           <Typography variant="epsilon" textColor="neutral600" tag="p">

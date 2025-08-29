@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Divider, Flex, FlexComponent, useCollator } from '@strapi/design-system';
+import { Divider, Flex, FlexComponent, ScrollArea, useCollator } from '@strapi/design-system';
 import { Lightning } from '@strapi/icons';
 import { useIntl } from 'react-intl';
 import { type To, useLocation } from 'react-router-dom';
@@ -113,73 +113,75 @@ const LeftMenu = ({ generalSectionLinks, pluginsSectionLinks }: LeftMenuProps) =
       <Divider />
 
       <MenuDetails $isMobileShown={isMobileShown}>
-        <NavListWrapper
-          tag="ul"
-          gap={3}
-          direction={{
-            initial: 'row',
-            large: 'column',
-          }}
-          flex={1}
-          paddingLeft={{
-            initial: 3,
-            large: 0,
-          }}
-          paddingTop={3}
-          paddingBottom={3}
-        >
-          {listLinks.length > 0
-            ? listLinks.map((link) => {
-                const LinkIcon = link.icon;
-                const badgeContentLock = link?.licenseOnly ? (
-                  <Lightning fill="primary600" />
-                ) : undefined;
+        <ScrollArea>
+          <NavListWrapper
+            tag="ul"
+            gap={3}
+            direction={{
+              initial: 'row',
+              large: 'column',
+            }}
+            flex={1}
+            paddingLeft={{
+              initial: 3,
+              large: 0,
+            }}
+            paddingTop={3}
+            paddingBottom={3}
+          >
+            {listLinks.length > 0
+              ? listLinks.map((link) => {
+                  const LinkIcon = link.icon;
+                  const badgeContentLock = link?.licenseOnly ? (
+                    <Lightning fill="primary600" />
+                  ) : undefined;
 
-                const badgeContentNumeric =
-                  link.notificationsCount && link.notificationsCount > 0
-                    ? link.notificationsCount.toString()
-                    : undefined;
+                  const badgeContentNumeric =
+                    link.notificationsCount && link.notificationsCount > 0
+                      ? link.notificationsCount.toString()
+                      : undefined;
 
-                const labelValue = formatMessage(link.intlLabel);
-                return (
-                  <LinkContainer tag="li" key={link.to} $isMobileShown={link.mobile}>
-                    <GuidedTourTooltip to={link.to}>
-                      <NavLink.Tooltip label={labelValue}>
-                        <NavLink.Link
-                          to={link.to}
-                          onClick={() => handleClickOnLink(link.to)}
-                          aria-label={labelValue}
-                        >
-                          <NavLink.Icon label={labelValue}>
-                            <LinkIcon width="20" height="20" fill="neutral500" />
-                          </NavLink.Icon>
-                          {badgeContentLock ? (
-                            <NavLinkBadgeLock
-                              label="locked"
-                              textColor="neutral500"
-                              paddingLeft={0}
-                              paddingRight={0}
-                            >
-                              {badgeContentLock}
-                            </NavLinkBadgeLock>
-                          ) : badgeContentNumeric ? (
-                            <NavLinkBadgeCounter
-                              label={badgeContentNumeric}
-                              backgroundColor="primary600"
-                              width="2.3rem"
-                              color="neutral0"
-                            >
-                              {badgeContentNumeric}
-                            </NavLinkBadgeCounter>
-                          ) : null}
-                        </NavLink.Link>
-                      </NavLink.Tooltip>
-                    </GuidedTourTooltip>
-                  </LinkContainer>
-                );
-              })
-            : null}
-        </NavListWrapper>
+                  const labelValue = formatMessage(link.intlLabel);
+                  return (
+                    <LinkContainer tag="li" key={link.to} $isMobileShown={link.mobile}>
+                      <GuidedTourTooltip to={link.to}>
+                        <NavLink.Tooltip label={labelValue}>
+                          <NavLink.Link
+                            to={link.to}
+                            onClick={() => handleClickOnLink(link.to)}
+                            aria-label={labelValue}
+                          >
+                            <NavLink.Icon label={labelValue}>
+                              <LinkIcon width="20" height="20" fill="neutral500" />
+                            </NavLink.Icon>
+                            {badgeContentLock ? (
+                              <NavLinkBadgeLock
+                                label="locked"
+                                textColor="neutral500"
+                                paddingLeft={0}
+                                paddingRight={0}
+                              >
+                                {badgeContentLock}
+                              </NavLinkBadgeLock>
+                            ) : badgeContentNumeric ? (
+                              <NavLinkBadgeCounter
+                                label={badgeContentNumeric}
+                                backgroundColor="primary600"
+                                width="2.3rem"
+                                color="neutral0"
+                              >
+                                {badgeContentNumeric}
+                              </NavLinkBadgeCounter>
+                            ) : null}
+                          </NavLink.Link>
+                        </NavLink.Tooltip>
+                      </GuidedTourTooltip>
+                    </LinkContainer>
+                  );
+                })
+              : null}
+          </NavListWrapper>
+        </ScrollArea>
         <TrialCountdown />
         <NavUser initials={initials}>{userDisplayName}</NavUser>
       </MenuDetails>

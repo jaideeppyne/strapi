@@ -253,7 +253,6 @@ const ListViewPage = () => {
               { number: pagination?.total }
             )}
             title={contentTypeTitle}
-            navigationAction={<BackButton />}
           />
           <Layouts.Action
             endActions={
@@ -331,7 +330,11 @@ const ListViewPage = () => {
             { number: pagination?.total }
           )}
           title={contentTypeTitle}
-          navigationAction={<BackButton />}
+          navigationAction={
+            <Box display={{ initial: 'none', large: 'block' }}>
+              <BackButton />
+            </Box>
+          }
         />
         <Layouts.Action
           endActions={

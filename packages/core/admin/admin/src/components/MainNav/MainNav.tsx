@@ -25,7 +25,7 @@ const MainNav = ({ isMobileShown, ...props }: FlexProps<'nav'> & { isMobileShown
       large: 'column',
     }}
     top={0}
-    zIndex={2}
+    zIndex={3}
     width={{
       initial: '100%',
       large: 10,

@@ -102,7 +102,14 @@ const DescriptionComponentRenderer = <Props, Description>({
       {descriptions.map((description) => {
         const key = getCompId(description);
         return (
-          <Description key={key} id={key} description={description} props={props} update={update} />
+          <Description
+            key={key}
+            id={key}
+            description={description}
+            props={props}
+            update={update}
+            type={'yolo'}
+          />
         );
       })}
       {children(states)}
@@ -119,6 +126,7 @@ interface DescriptionProps<Props, Description> {
   id: string;
   props: Props;
   update: (id: string, value: Description | null) => void;
+  type?: string;
 }
 
 /**

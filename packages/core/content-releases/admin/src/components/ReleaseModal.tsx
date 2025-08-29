@@ -163,7 +163,11 @@ export const ReleaseModal = ({
                     </Box>
                     {values.isScheduled && (
                       <>
-                        <Flex gap={4} alignItems="start">
+                        <Flex
+                          gap={4}
+                          alignItems="start"
+                          direction={{ initial: 'column', medium: 'row' }}
+                        >
                           <Box width="100%">
                             <Field.Root
                               name="date"

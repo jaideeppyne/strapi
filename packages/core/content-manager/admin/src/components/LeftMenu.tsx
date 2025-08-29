@@ -9,11 +9,10 @@ import {
   SubNavSections,
   SubNavSection,
   SubNavLink,
-  SubNav as DSSubNav,
 } from '@strapi/design-system';
 import { parse, stringify } from 'qs';
 import { useIntl } from 'react-intl';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { useContentTypeSchema } from '../hooks/useContentTypeSchema';
 import { useTypedSelector } from '../modules/hooks';
@@ -121,8 +120,7 @@ const LeftMenu = () => {
   };
 
   return (
-    <DSSubNav aria-label={label}>
-      <SubNav.Header label={label} />
+    <SubNav.Main aria-label={label} header={<SubNav.Header label={label} />}>
       <Flex
         paddingTop={5}
         paddingBottom={1}
@@ -137,8 +135,8 @@ const LeftMenu = () => {
           onChange={handleChangeSearch}
           onClear={handleClear}
           placeholder={formatMessage({
-            id: 'content-manager.components.LeftMenu.Search.label',
-            defaultMessage: 'Search for a content type',
+            id: 'global.search',
+            defaultMessage: 'Search',
           })}
           size="S"
           // eslint-disable-next-line react/no-children-prop
@@ -173,7 +171,7 @@ const LeftMenu = () => {
           );
         })}
       </SubNavSections>
-    </DSSubNav>
+    </SubNav.Main>
   );
 };
 
