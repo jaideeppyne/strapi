@@ -1,3 +1,4 @@
+import { Cog } from '@strapi/icons';
 import { useIntl } from 'react-intl';
 import { Navigate, Outlet, useMatch } from 'react-router-dom';
 
@@ -26,14 +27,19 @@ const Layout = () => {
     return <Navigate to="application-infos" />;
   }
 
+  const pageTitle = formatMessage({
+    id: 'global.settings',
+    defaultMessage: 'Settings',
+  });
+
   return (
-    <Layouts.Root sideNav={<SettingsNav menu={menu} />}>
-      <Page.Title>
-        {formatMessage({
-          id: 'global.settings',
-          defaultMessage: 'Settings',
-        })}
-      </Page.Title>
+    <Layouts.Root
+      sideNav={<SettingsNav menu={menu} />}
+      sideNavLinks={menu}
+      breadcrumbIcon={<Cog width="20" height="20" fill="neutral500" />}
+      rootLabel={pageTitle}
+    >
+      <Page.Title>{pageTitle}</Page.Title>
       <Outlet />
     </Layouts.Root>
   );

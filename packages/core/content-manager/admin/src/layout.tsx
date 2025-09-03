@@ -2,6 +2,7 @@
 import * as React from 'react';
 
 import { Page, Layouts } from '@strapi/admin/strapi-admin';
+import { Feather } from '@strapi/icons';
 import { useIntl } from 'react-intl';
 import { Navigate, Outlet, useLocation, useMatch } from 'react-router-dom';
 
@@ -12,6 +13,7 @@ import { RelationDragPreview } from './components/DragPreviews/RelationDragPrevi
 import { LeftMenu } from './components/LeftMenu';
 import { ItemTypes } from './constants/dragAndDrop';
 import { useContentManagerInitData } from './hooks/useContentManagerInitData';
+import { useMenu } from './hooks/useMenu';
 import { getTranslation } from './utils/translations';
 
 /* -------------------------------------------------------------------------------------------------
@@ -25,6 +27,9 @@ const Layout = () => {
   const authorisedModels = [...collectionTypeLinks, ...singleTypeLinks].sort((a, b) =>
     a.title.localeCompare(b.title)
   );
+
+  // Navigation sections for breadcrumb generation and side nav
+  const { menu } = useMenu();
 
   const { pathname } = useLocation();
   const { formatMessage } = useIntl();
@@ -80,7 +85,15 @@ const Layout = () => {
           defaultMessage: 'Content Manager',
         })}
       </Page.Title>
-      <Layouts.Root sideNav={<LeftMenu />}>
+      <Layouts.Root
+        sideNav={<LeftMenu menu={menu} />}
+        sideNavLinks={menu}
+        rootLabel={formatMessage({
+          id: getTranslation('plugin.name'),
+          defaultMessage: 'Content Manager',
+        })}
+        breadcrumbIcon={<Feather width="20" height="20" fill="neutral500" />}
+      >
         <DragLayer renderItem={renderDraglayerItem} />
         <Outlet />
       </Layouts.Root>

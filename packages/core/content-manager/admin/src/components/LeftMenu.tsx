@@ -17,17 +17,13 @@ import { useTypedSelector } from '../modules/hooks';
 import { getTranslation } from '../utils/translations';
 
 import type { ContentManagerLink } from '../hooks/useContentManagerInitData';
+import type { Menu } from '../hooks/useMenu';
 
-const LeftMenu = () => {
+const LeftMenu = ({ menu }: { menu: Menu[] }) => {
   const [search, setSearch] = React.useState('');
   const [{ query }] = useQueryParams<{ plugins?: object }>();
   const { formatMessage, locale } = useIntl();
 
-  const collectionTypeLinks = useTypedSelector(
-    (state) => state['content-manager'].app.collectionTypeLinks
-  );
-
-  const singleTypeLinks = useTypedSelector((state) => state['content-manager'].app.singleTypeLinks);
   const { schemas } = useContentTypeSchema();
 
   const { startsWith } = useFilter(locale, {
@@ -38,49 +34,17 @@ const LeftMenu = () => {
     sensitivity: 'base',
   });
 
-  const menu = React.useMemo(
+  const filteredMenu = React.useMemo(
     () =>
-      [
-        {
-          id: 'collectionTypes',
-          title: formatMessage({
-            id: getTranslation('components.LeftMenu.collection-types'),
-            defaultMessage: 'Collection Types',
-          }),
-          searchable: true,
-          links: collectionTypeLinks,
-        },
-        {
-          id: 'singleTypes',
-          title: formatMessage({
-            id: getTranslation('components.LeftMenu.single-types'),
-            defaultMessage: 'Single Types',
-          }),
-          searchable: true,
-          links: singleTypeLinks,
-        },
-      ].map((section) => ({
+      menu.map((section) => ({
         ...section,
         links: section.links
           /**
-           * Filter by the search value
-           */
-          .filter((link) => startsWith(link.title, search.trim()))
-          /**
            * Sort correctly using the language
            */
-          .sort((a, b) => formatter.compare(a.title, b.title))
-          /**
-           * Apply the formated strings to the links from react-intl
-           */
-          .map((link) => {
-            return {
-              ...link,
-              title: formatMessage({ id: link.title, defaultMessage: link.title }),
-            };
-          }),
+          .sort((a, b) => formatter.compare(a.title, b.title)),
       })),
-    [collectionTypeLinks, search, singleTypeLinks, startsWith, formatMessage, formatter]
+    [formatter, menu]
   );
 
   const handleClear = () => {
@@ -139,7 +103,7 @@ const LeftMenu = () => {
           />
         </Flex>
         <SubNav.Sections>
-          {menu.map((section) => {
+          {filteredMenu.map((section) => {
             return (
               <SubNav.Section
                 key={section.id}

@@ -147,7 +147,6 @@ const Sections = ({ children, ...props }: { children: React.ReactNode[]; [key: s
 const GuidedTourTooltip = ({
   sectionId,
   children,
-  badgeLabel,
 }: {
   sectionId?: string;
   children: React.ReactNode;
