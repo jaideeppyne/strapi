@@ -38,6 +38,7 @@ const Panel: PanelComponent = () => {
       id: 'content-manager.containers.edit.panels.review-workflows.title',
       defaultMessage: 'Review Workflows',
     }),
+    foldable: true,
     content: (
       <Flex direction="column" gap={2} alignItems="stretch" width="100%">
         <AssigneeSelect />

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { darkTheme, lightTheme, type StrapiTheme } from '@strapi/design-system';
+import { darkTheme, lightTheme } from '@strapi/design-system';
 import { Clock, User, TrendUp } from '@strapi/icons';
 import invariant from 'invariant';
 import isFunction from 'lodash/isFunction';
@@ -46,7 +46,7 @@ interface StrapiAppConstructorArgs extends Partial<Pick<StrapiApp, 'appPlugins'>
     locales?: string[];
     menu?: { logo: string };
     notifications?: { releases: boolean };
-    theme?: { light: StrapiTheme; dark: StrapiTheme };
+    theme?: { light: DefaultTheme; dark: DefaultTheme };
     translations?: Record<string, Record<string, string>>;
     tutorials?: boolean;
   };
@@ -105,7 +105,7 @@ class StrapiApp {
     locales: ['en'],
     menuLogo: Logo,
     notifications: { releases: true },
-    themes: { light: lightTheme as StrapiTheme, dark: darkTheme as StrapiTheme },
+    themes: { light: lightTheme, dark: darkTheme },
     translations: {},
     tutorials: true,
   };
@@ -395,7 +395,7 @@ class StrapiApp {
 
   async loadAdminTrads() {
     const adminLocales = await Promise.all(
-      this.configurations.locales.map(async (locale: string) => {
+      this.configurations.locales.map(async (locale) => {
         try {
           const { default: data } = await import(`./translations/${locale}.js`);
 
@@ -462,7 +462,7 @@ class StrapiApp {
 
     const translations = this.configurations.locales.reduce<{
       [locale: string]: Translation['data'];
-    }>((acc: { [locale: string]: Translation['data'] }, current: string) => {
+    }>((acc, current: string) => {
       acc[current] = {
         ...adminTranslations[current],
         ...(mergedTrads[current] || {}),

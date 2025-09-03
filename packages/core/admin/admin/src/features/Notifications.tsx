@@ -87,7 +87,8 @@ const NotificationsProvider = ({ children }: NotificationsProviderProps) => {
         position="fixed"
         direction="column"
         alignItems="stretch"
-        gap={2}
+        gap={4}
+        marginTop={4}
         top={`5.6rem`}
         width="100%"
         maxWidth={`50rem`}
@@ -95,7 +96,7 @@ const NotificationsProvider = ({ children }: NotificationsProviderProps) => {
       >
         {notifications.map((notification) => {
           return (
-            <Box key={notification.id} margin={4}>
+            <Box key={notification.id} paddingLeft={4} paddingRight={4}>
               <Notification {...notification} clearNotification={clearNotification} />
             </Box>
           );

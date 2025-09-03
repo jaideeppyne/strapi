@@ -70,8 +70,9 @@ const Panel: PanelComponent = ({
       id: 'content-releases.plugin.name',
       defaultMessage: 'Releases',
     }),
+    foldable: true,
     content: (
-      <Flex direction="column" alignItems="stretch" gap={3} width="100%">
+      <Flex direction="column" alignItems="stretch" gap={4} width="100%">
         {releases?.map((release) => (
           <Flex
             key={release.id}
