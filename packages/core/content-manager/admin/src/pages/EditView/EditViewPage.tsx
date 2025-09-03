@@ -35,7 +35,7 @@ import { handleInvisibleAttributes } from './utils/data';
 const FormContainer = styled(Grid.Item)`
   order: 1;
 
-  ${({ theme }) => theme.breakpoints.medium} {
+  ${({ theme }) => theme.breakpoints.large} {
     order: 0;
   }
 `;
@@ -43,7 +43,7 @@ const FormContainer = styled(Grid.Item)`
 const ActionsContainer = styled(Grid.Item)`
   order: 0;
 
-  ${({ theme }) => theme.breakpoints.medium} {
+  ${({ theme }) => theme.breakpoints.large} {
     order: 1;
   }
 `;

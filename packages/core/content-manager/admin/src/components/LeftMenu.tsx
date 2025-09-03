@@ -1,35 +1,28 @@
 import * as React from 'react';
 
-import { useQueryParams, SubNav, useSubNav } from '@strapi/admin/strapi-admin';
+import { useQueryParams, SubNav } from '@strapi/admin/strapi-admin';
 import {
   Flex,
   Searchbar,
   useCollator,
   useFilter,
-  SubNavSections,
-  SubNavSection,
-  SubNavLink,
+  Divider,
+  ScrollArea,
 } from '@strapi/design-system';
 import { parse, stringify } from 'qs';
 import { useIntl } from 'react-intl';
-import { NavLink } from 'react-router-dom';
 
 import { useContentTypeSchema } from '../hooks/useContentTypeSchema';
-import { useTypedSelector } from '../modules/hooks';
 import { getTranslation } from '../utils/translations';
 
 import type { ContentManagerLink } from '../hooks/useContentManagerInitData';
+import type { Menu } from '../hooks/useMenu';
 
-const LeftMenu = () => {
+const LeftMenu = ({ menu }: { menu: Menu[] }) => {
   const [search, setSearch] = React.useState('');
   const [{ query }] = useQueryParams<{ plugins?: object }>();
   const { formatMessage, locale } = useIntl();
-  const { closeSideNav } = useSubNav();
-  const collectionTypeLinks = useTypedSelector(
-    (state) => state['content-manager'].app.collectionTypeLinks
-  );
 
-  const singleTypeLinks = useTypedSelector((state) => state['content-manager'].app.singleTypeLinks);
   const { schemas } = useContentTypeSchema();
 
   const { startsWith } = useFilter(locale, {
@@ -40,28 +33,9 @@ const LeftMenu = () => {
     sensitivity: 'base',
   });
 
-  const menu = React.useMemo(
+  const filteredMenu = React.useMemo(
     () =>
-      [
-        {
-          id: 'collectionTypes',
-          title: formatMessage({
-            id: getTranslation('components.LeftMenu.collection-types'),
-            defaultMessage: 'Collection Types',
-          }),
-          searchable: true,
-          links: collectionTypeLinks,
-        },
-        {
-          id: 'singleTypes',
-          title: formatMessage({
-            id: getTranslation('components.LeftMenu.single-types'),
-            defaultMessage: 'Single Types',
-          }),
-          searchable: true,
-          links: singleTypeLinks,
-        },
-      ].map((section) => ({
+      menu.map((section) => ({
         ...section,
         links: section.links
           /**
@@ -71,18 +45,9 @@ const LeftMenu = () => {
           /**
            * Sort correctly using the language
            */
-          .sort((a, b) => formatter.compare(a.title, b.title))
-          /**
-           * Apply the formated strings to the links from react-intl
-           */
-          .map((link) => {
-            return {
-              ...link,
-              title: formatMessage({ id: link.title, defaultMessage: link.title }),
-            };
-          }),
+          .sort((a, b) => formatter.compare(a.title, b.title)),
       })),
-    [collectionTypeLinks, search, singleTypeLinks, startsWith, formatMessage, formatter]
+    [search, startsWith, formatter, menu]
   );
 
   const handleClear = () => {
@@ -120,57 +85,54 @@ const LeftMenu = () => {
   };
 
   return (
-    <SubNav.Main aria-label={label} header={<SubNav.Header label={label} />}>
-      <Flex
-        paddingTop={5}
-        paddingBottom={1}
-        paddingLeft={5}
-        paddingRight={5}
-        gap={3}
-        direction={'column'}
-        alignItems={'stretch'}
-      >
-        <Searchbar
-          value={search}
-          onChange={handleChangeSearch}
-          onClear={handleClear}
-          placeholder={formatMessage({
-            id: 'global.search',
-            defaultMessage: 'Search',
+    <SubNav.Main aria-label={label}>
+      <SubNav.Header label={label} />
+      <Divider />
+      <ScrollArea>
+        <Flex padding={5} paddingBottom={0} gap={3} direction="column" alignItems="stretch">
+          <Searchbar
+            value={search}
+            onChange={handleChangeSearch}
+            onClear={handleClear}
+            placeholder={formatMessage({
+              id: 'global.search',
+              defaultMessage: 'Search',
+            })}
+            size="S"
+            // eslint-disable-next-line react/no-children-prop
+            children={undefined}
+            name={'search_contentType'}
+            clearLabel={formatMessage({ id: 'clearLabel', defaultMessage: 'Clear' })}
+          />
+        </Flex>
+        <SubNav.Sections>
+          {filteredMenu.map((section) => {
+            return (
+              <SubNav.Section
+                key={section.id}
+                label={section.title}
+                badgeLabel={section.links.length.toString()}
+              >
+                {section.links.map((link) => {
+                  return (
+                    <SubNav.Link
+                      key={link.uid}
+                      to={{
+                        pathname: link.to,
+                        search: stringify({
+                          ...parse(link.search ?? ''),
+                          plugins: getPluginsParamsForLink(link),
+                        }),
+                      }}
+                      label={link.title}
+                    />
+                  );
+                })}
+              </SubNav.Section>
+            );
           })}
-          size="S"
-          // eslint-disable-next-line react/no-children-prop
-          children={undefined}
-          name={'search_contentType'}
-          clearLabel={formatMessage({ id: 'clearLabel', defaultMessage: 'Clear' })}
-        />
-      </Flex>
-      <SubNavSections>
-        {menu.map((section) => {
-          return (
-            <SubNavSection key={section.id} label={section.title}>
-              {section.links.map((link) => {
-                return (
-                  <SubNavLink
-                    tag={NavLink}
-                    key={link.uid}
-                    to={{
-                      pathname: link.to,
-                      search: stringify({
-                        ...parse(link.search ?? ''),
-                        plugins: getPluginsParamsForLink(link),
-                      }),
-                    }}
-                    onClick={closeSideNav}
-                  >
-                    {link.title}
-                  </SubNavLink>
-                );
-              })}
-            </SubNavSection>
-          );
-        })}
-      </SubNavSections>
+        </SubNav.Sections>
+      </ScrollArea>
     </SubNav.Main>
   );
 };

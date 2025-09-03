@@ -172,10 +172,18 @@ const Panel = React.forwardRef<any, PanelProps>(({ children, title, type }, ref)
       background="neutral0"
       borderColor="neutral150"
       hasRadius
-      paddingBottom={4}
-      paddingLeft={4}
-      paddingRight={4}
+      paddingLeft={{
+        initial: 4,
+        medium: 6,
+        large: 4,
+      }}
+      paddingRight={{
+        initial: 4,
+        medium: 6,
+        large: 4,
+      }}
       paddingTop={4}
+      paddingBottom={4}
       shadow={
         type === 'actions'
           ? {

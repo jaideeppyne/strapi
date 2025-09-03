@@ -11,6 +11,7 @@ import {
   Tr,
   Typography,
   Portal,
+  ScrollArea,
 } from '@strapi/design-system';
 import { Pencil } from '@strapi/icons';
 import { useIntl } from 'react-intl';
@@ -60,64 +61,66 @@ const RecentDocumentsTable = ({
   };
 
   return (
-    <Table colCount={5} rowCount={documents?.length ?? 0}>
-      <Tbody>
-        {documents?.map((document) => (
-          <Tr onClick={handleRowClick(document)} cursor="pointer" key={document.documentId}>
-            <Td>
-              <CellTypography title={document.title} variant="omega" textColor="neutral800">
-                {document.title}
-              </CellTypography>
-            </Td>
-            <Td>
-              <CellTypography variant="omega" textColor="neutral600">
-                {document.kind === 'singleType'
-                  ? formatMessage({
-                      id: 'content-manager.widget.last-edited.single-type',
-                      defaultMessage: 'Single-Type',
-                    })
-                  : formatMessage({
-                      id: document.contentTypeDisplayName,
-                      defaultMessage: document.contentTypeDisplayName,
+    <ScrollArea>
+      <Table colCount={5} rowCount={documents?.length ?? 0}>
+        <Tbody>
+          {documents?.map((document) => (
+            <Tr onClick={handleRowClick(document)} cursor="pointer" key={document.documentId}>
+              <Td>
+                <CellTypography title={document.title} variant="omega" textColor="neutral800">
+                  {document.title}
+                </CellTypography>
+              </Td>
+              <Td>
+                <CellTypography variant="omega" textColor="neutral600">
+                  {document.kind === 'singleType'
+                    ? formatMessage({
+                        id: 'content-manager.widget.last-edited.single-type',
+                        defaultMessage: 'Single-Type',
+                      })
+                    : formatMessage({
+                        id: document.contentTypeDisplayName,
+                        defaultMessage: document.contentTypeDisplayName,
+                      })}
+                </CellTypography>
+              </Td>
+              <Td>
+                <Box display="inline-block">
+                  {document.status ? (
+                    <DocumentStatus status={document.status} />
+                  ) : (
+                    <Typography textColor="neutral600" aria-hidden>
+                      -
+                    </Typography>
+                  )}
+                </Box>
+              </Td>
+              <Td>
+                <Typography textColor="neutral600">
+                  <RelativeTime timestamp={new Date(document.updatedAt)} />
+                </Typography>
+              </Td>
+              <Td onClick={(e) => e.stopPropagation()}>
+                <Box display="inline-block">
+                  <IconButton
+                    tag={Link}
+                    to={getEditViewLink(document)}
+                    onClick={() => trackUsage('willEditEntryFromHome', { type })}
+                    label={formatMessage({
+                      id: 'content-manager.actions.edit.label',
+                      defaultMessage: 'Edit',
                     })}
-              </CellTypography>
-            </Td>
-            <Td>
-              <Box display="inline-block">
-                {document.status ? (
-                  <DocumentStatus status={document.status} />
-                ) : (
-                  <Typography textColor="neutral600" aria-hidden>
-                    -
-                  </Typography>
-                )}
-              </Box>
-            </Td>
-            <Td>
-              <Typography textColor="neutral600">
-                <RelativeTime timestamp={new Date(document.updatedAt)} />
-              </Typography>
-            </Td>
-            <Td onClick={(e) => e.stopPropagation()}>
-              <Box display="inline-block">
-                <IconButton
-                  tag={Link}
-                  to={getEditViewLink(document)}
-                  onClick={() => trackUsage('willEditEntryFromHome', { type })}
-                  label={formatMessage({
-                    id: 'content-manager.actions.edit.label',
-                    defaultMessage: 'Edit',
-                  })}
-                  variant="ghost"
-                >
-                  <Pencil />
-                </IconButton>
-              </Box>
-            </Td>
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
+                    variant="ghost"
+                  >
+                    <Pencil />
+                  </IconButton>
+                </Box>
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </ScrollArea>
   );
 };
 

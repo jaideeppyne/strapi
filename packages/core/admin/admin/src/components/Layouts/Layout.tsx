@@ -1,7 +1,15 @@
 import * as React from 'react';
 
-import { Box, Button, Flex } from '@strapi/design-system';
+import { AccessibleIcon, Box, Flex } from '@strapi/design-system';
+import { List } from '@strapi/icons';
 import { styled } from 'styled-components';
+
+import {
+  useBreadcrumb,
+  type BreadcrumbItem,
+  type NavigationSection,
+} from '../../hooks/useBreadcrumb';
+import { Breadcrumb } from '../Breadcrumb';
 
 import { ActionLayout } from './ActionLayout';
 import { ContentLayout } from './ContentLayout';
@@ -10,8 +18,11 @@ import { HeaderLayout, BaseHeaderLayout } from './HeaderLayout';
 
 interface LayoutProps {
   children: React.ReactNode;
+  customBreadcrumbs?: BreadcrumbItem[];
   sideNav?: React.ReactNode;
-  sideNavLabel?: string;
+  sideNavLinks?: NavigationSection[];
+  rootLabel?: string;
+  breadcrumbIcon?: React.ReactNode;
 }
 
 const GridContainer = styled(Box)<{ $hasSideNav: boolean; $isSideNavMobileVisible: boolean }>`
@@ -41,15 +52,16 @@ const SideNavContainer = styled(Flex)<{ $isSideNavMobileVisible: boolean }>`
   transition: transform 0.3s ease-in-out;
 
   ${({ theme }) => theme.breakpoints.medium} {
+    width: 23.2rem;
     top: 5.6rem;
     height: calc(100vh - 5.6rem);
     position: sticky;
-    width: auto;
     box-shadow: none;
     transform: none;
     border-top: 1px solid ${({ theme }) => theme.colors.neutral150};
   }
   ${({ theme }) => theme.breakpoints.large} {
+    height: 100vh;
     top: 0;
     border-top: none;
   }
@@ -68,8 +80,43 @@ const OverflowingItem = styled(Box)`
   }
 `;
 
-const RootLayout = ({ sideNav, sideNavLabel, children }: LayoutProps) => {
+const BreadcrumbContainer = styled(Box)`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spaces[2]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.neutral150};
+
+  ${({ theme }) => theme.breakpoints.medium} {
+    display: none;
+  }
+`;
+
+const BreadcrumbIcon = styled(Box)`
+  text-decoration: none;
+  display: flex;
+  border-radius: ${({ theme }) => theme.borderRadius};
+  background: ${({ theme }) => theme.colors.neutral0};
+  color: ${({ theme }) => theme.colors.neutral500};
+  position: relative;
+  width: fit-content;
+  padding-block: 0.6rem;
+  padding-inline: 0.6rem;
+`;
+
+const RootLayout = ({
+  sideNav,
+  rootLabel,
+  breadcrumbIcon,
+  sideNavLinks,
+  customBreadcrumbs,
+  children,
+}: LayoutProps) => {
   const [isSideNavMobileVisible, setIsSideNavMobileVisible] = React.useState(false);
+
+  const breadcrumbItems = useBreadcrumb({
+    sideNavLinks,
+    customBreadcrumbs,
+  });
 
   React.useEffect(() => {
     const handleCloseMobileNavigation = () => {
@@ -103,26 +150,22 @@ const RootLayout = ({ sideNav, sideNavLabel, children }: LayoutProps) => {
         }}
       >
         {sideNav && (
-          <Box
-            display={{
-              initial: 'block',
-              medium: 'none',
-            }}
-            padding={{
-              initial: 4,
-              medium: 6,
-              large: 10,
-            }}
-          >
-            <Button
+          <BreadcrumbContainer paddingTop={2} paddingBottom={2} paddingLeft={4} paddingRight={4}>
+            <BreadcrumbIcon
               onClick={() => setIsSideNavMobileVisible(!isSideNavMobileVisible)}
-              variant="tertiary"
-              width="100%"
+              aria-label={rootLabel}
             >
-              {sideNavLabel ||
-                (isSideNavMobileVisible ? 'Close Side navigation' : 'Open Side navigation')}
-            </Button>
-          </Box>
+              <AccessibleIcon
+                label={
+                  rootLabel ||
+                  (isSideNavMobileVisible ? 'Close Side navigation' : 'Open Side navigation')
+                }
+              >
+                {breadcrumbIcon || <List width="20" height="20" fill="neutral500" />}
+              </AccessibleIcon>
+            </BreadcrumbIcon>
+            {breadcrumbItems.length > 0 && <Breadcrumb items={breadcrumbItems} />}
+          </BreadcrumbContainer>
         )}
         {children}
       </OverflowingItem>

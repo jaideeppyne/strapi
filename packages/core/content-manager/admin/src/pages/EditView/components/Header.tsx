@@ -73,8 +73,7 @@ const Header = ({ isCreating, status, title: documentTitle = 'Untitled' }: Heade
       direction="column"
       alignItems="flex-start"
       paddingTop={{
-        initial: 0,
-        medium: 4,
+        initial: 4,
         large: 6,
       }}
       paddingBottom={{

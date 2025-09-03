@@ -511,7 +511,6 @@ const CreateButton = ({ variant }: CreateButtonProps) => {
         search: stringify({ plugins: query.plugins }),
       }}
       minWidth="max-content"
-      marginLeft={2}
     >
       {formatMessage({
         id: getTranslation('HeaderLayout.button.label-add-entry'),

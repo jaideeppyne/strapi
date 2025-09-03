@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Box, Flex, Typography, TypographyProps, useCallbackRef } from '@strapi/design-system';
+import { Box, Flex, Typography, TypographyProps } from '@strapi/design-system';
 import { styled } from 'styled-components';
 
 import { useElementOnScreen } from '../../hooks/useElementOnScreen';
@@ -19,12 +19,11 @@ interface BaseHeaderLayoutProps extends Omit<TypographyProps<'div'>, 'tag'> {
   secondaryAction?: React.ReactNode;
   subtitle?: React.ReactNode;
   sticky?: boolean;
-  width?: number;
 }
 
 const BaseHeaderLayout = React.forwardRef<HTMLDivElement, BaseHeaderLayoutProps>(
   (
-    { navigationAction, primaryAction, secondaryAction, subtitle, title, sticky, width, ...props },
+    { navigationAction, primaryAction, secondaryAction, subtitle, title, sticky, ...props },
     ref
   ) => {
     const isSubtitleString = typeof subtitle === 'string';
@@ -32,18 +31,31 @@ const BaseHeaderLayout = React.forwardRef<HTMLDivElement, BaseHeaderLayoutProps>
     if (sticky) {
       return (
         <StickyHeader
-          paddingLeft={6}
-          paddingRight={6}
+          paddingLeft={{
+            initial: 4,
+            medium: 6,
+          }}
+          paddingRight={{
+            initial: 4,
+            medium: 6,
+          }}
           paddingTop={2}
           paddingBottom={2}
           position="fixed"
-          top={0}
+          top={{
+            initial: '5.7rem',
+            large: 0,
+          }}
           right={0}
           background="neutral0"
           shadow="tableShadow"
-          width={`${width}px`}
-          zIndex={3}
-          minHeight={'5.7rem'}
+          width={{
+            initial: '100%',
+            medium: `calc(100% - 23.2rem)`,
+            large: `calc(100% - 23.2rem - 5.6rem)`,
+          }}
+          zIndex={2}
+          minHeight={'5.7em'}
           data-strapi-header-sticky
         >
           <Flex justifyContent="space-between" wrap="wrap">
@@ -95,7 +107,7 @@ const BaseHeaderLayout = React.forwardRef<HTMLDivElement, BaseHeaderLayoutProps>
       >
         <Flex direction="column" alignItems="flex-start" gap={2}>
           {navigationAction}
-          <Flex justifyContent="space-between" wrap="wrap" gap={2}>
+          <Flex justifyContent="space-between" wrap="wrap" gap={4}>
             <Flex minWidth={0}>
               <Typography tag="h1" variant="alpha" {...props}>
                 {title}
@@ -106,7 +118,12 @@ const BaseHeaderLayout = React.forwardRef<HTMLDivElement, BaseHeaderLayoutProps>
           </Flex>
         </Flex>
         {isSubtitleString ? (
-          <Typography variant="epsilon" textColor="neutral600" tag="p">
+          <Typography
+            variant="epsilon"
+            textColor="neutral600"
+            tag="p"
+            paddingTop={{ initial: 4, large: 0 }}
+          >
             {subtitle}
           </Typography>
         ) : (
@@ -124,8 +141,6 @@ const BaseHeaderLayout = React.forwardRef<HTMLDivElement, BaseHeaderLayoutProps>
 interface HeaderLayoutProps extends BaseHeaderLayoutProps {}
 
 const HeaderLayout = (props: HeaderLayoutProps) => {
-  const baseHeaderLayoutRef = React.useRef<HTMLDivElement>(null);
-  const [headerSize, setHeaderSize] = React.useState<DOMRect | null>(null);
   const [isVisible, setIsVisible] = React.useState(true);
 
   const containerRef = useElementOnScreen<HTMLDivElement>(setIsVisible, {
@@ -134,76 +149,16 @@ const HeaderLayout = (props: HeaderLayoutProps) => {
     threshold: 0,
   });
 
-  useResizeObserver([containerRef, baseHeaderLayoutRef], () => {
-    if (baseHeaderLayoutRef.current) {
-      setHeaderSize(baseHeaderLayoutRef.current.getBoundingClientRect());
-    }
-  });
-
-  React.useEffect(() => {
-    if (baseHeaderLayoutRef.current) {
-      setHeaderSize(baseHeaderLayoutRef.current.getBoundingClientRect());
-    }
-  }, [baseHeaderLayoutRef]);
-
-  // Update header size on window resize
-  React.useEffect(() => {
-    const handleResize = () => {
-      if (baseHeaderLayoutRef.current) {
-        setHeaderSize(baseHeaderLayoutRef.current.getBoundingClientRect());
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   return (
     <>
-      <div
-        style={{
-          height: headerSize?.height,
-          minHeight: headerSize?.height,
-        }}
-        ref={containerRef}
-      >
-        {isVisible && <BaseHeaderLayout ref={baseHeaderLayoutRef} {...props} />}
-      </div>
+      <div ref={containerRef}>{isVisible && <BaseHeaderLayout {...props} />}</div>
 
-      {!isVisible && <BaseHeaderLayout {...props} sticky width={headerSize?.width} />}
+      {!isVisible && <BaseHeaderLayout {...props} sticky />}
     </>
   );
 };
 
 HeaderLayout.displayName = 'HeaderLayout';
-
-/**
- * useResizeObserver: hook that observes the size of an element and calls a callback when it changes.
- */
-const useResizeObserver = (
-  sources: React.RefObject<HTMLElement> | React.RefObject<HTMLElement>[],
-  onResize: ResizeObserverCallback
-) => {
-  const handleResize = useCallbackRef(onResize);
-
-  React.useLayoutEffect(() => {
-    const resizeObs = new ResizeObserver(handleResize);
-
-    if (Array.isArray(sources)) {
-      sources.forEach((source) => {
-        if (source.current) {
-          resizeObs.observe(source.current);
-        }
-      });
-    } else if (sources.current) {
-      resizeObs.observe(sources.current);
-    }
-
-    return () => {
-      resizeObs.disconnect();
-    };
-  }, [sources, handleResize]);
-};
 
 export type { HeaderLayoutProps, BaseHeaderLayoutProps };
 export { HeaderLayout, BaseHeaderLayout };

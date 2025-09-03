@@ -2,6 +2,7 @@
 import * as React from 'react';
 
 import { Page, Layouts } from '@strapi/admin/strapi-admin';
+import { Feather } from '@strapi/icons';
 import { useIntl } from 'react-intl';
 import { Navigate, Outlet, useLocation, useMatch } from 'react-router-dom';
 
@@ -12,6 +13,7 @@ import { RelationDragPreview } from './components/DragPreviews/RelationDragPrevi
 import { LeftMenu } from './components/LeftMenu';
 import { ItemTypes } from './constants/dragAndDrop';
 import { useContentManagerInitData } from './hooks/useContentManagerInitData';
+import { useMenu } from './hooks/useMenu';
 import { getTranslation } from './utils/translations';
 
 /* -------------------------------------------------------------------------------------------------
@@ -28,6 +30,9 @@ const Layout = () => {
 
   const { pathname } = useLocation();
   const { formatMessage } = useIntl();
+
+  // Navigation sections for breadcrumb generation
+  const { menu } = useMenu();
 
   if (isLoading) {
     return (
@@ -72,13 +77,6 @@ const Layout = () => {
     );
   }
 
-  const selectedModel = models.find(({ uid }) => uid === contentTypeMatch?.params.uid);
-
-  const contentType = formatMessage({
-    id: getTranslation(`components.SideNav.trigger.kind.${contentTypeMatch?.params.kind}`),
-    defaultMessage: 'Content Type',
-  });
-
   return (
     <>
       <Page.Title>
@@ -88,15 +86,13 @@ const Layout = () => {
         })}
       </Page.Title>
       <Layouts.Root
-        sideNav={<LeftMenu />}
-        sideNavLabel={
-          selectedModel?.info.displayName
-            ? `${contentType}: ${selectedModel?.info.displayName}`
-            : formatMessage({
-                id: getTranslation('components.SideNav.trigger.kind.default'),
-                defaultMessage: 'Select Content Type',
-              })
-        }
+        sideNav={<LeftMenu menu={menu} />}
+        sideNavLinks={menu}
+        rootLabel={formatMessage({
+          id: getTranslation('plugin.name'),
+          defaultMessage: 'Content Manager',
+        })}
+        breadcrumbIcon={<Feather width="20" height="20" fill="neutral500" />}
       >
         <DragLayer renderItem={renderDraglayerItem} />
         <Outlet />

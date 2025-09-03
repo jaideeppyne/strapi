@@ -30,6 +30,7 @@ import {
   Dialog,
   SimpleMenu,
   Menu,
+  Box,
 } from '@strapi/design-system';
 import { More, Pencil, Trash } from '@strapi/icons';
 import { EmptyDocuments } from '@strapi/icons/symbols';
@@ -233,11 +234,18 @@ const ReleaseDetailsLayout = ({
         <Layouts.Header
           title={release.name}
           subtitle={
-            <Flex gap={2} lineHeight={6}>
+            <Flex
+              gap={4}
+              lineHeight={6}
+              alignItems="flex-start"
+              marginTop={{ initial: 2, medium: 0 }}
+            >
               <Typography textColor="neutral600" variant="epsilon">
                 {numberOfEntriesText + (isScheduled ? ` - ${scheduledText}` : '')}
               </Typography>
-              <Badge {...getBadgeProps(release.status)}>{release.status}</Badge>
+              <Box flex={1}>
+                <Badge {...getBadgeProps(release.status)}>{release.status}</Badge>
+              </Box>
             </Flex>
           }
           navigationAction={<BackButton fallback=".." />}

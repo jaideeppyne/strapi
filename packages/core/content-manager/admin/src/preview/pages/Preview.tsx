@@ -308,6 +308,10 @@ const PreviewPage = () => {
             <Flex flex={1} overflow="auto" alignItems="stretch">
               {hasAdvancedPreview && (
                 <Box
+                  display={{
+                    initial: 'none',
+                    large: 'block',
+                  }}
                   overflow="auto"
                   width={isSideEditorOpen ? '50%' : 0}
                   borderWidth="0 1px 0 0"
@@ -333,49 +337,57 @@ const PreviewPage = () => {
                 height="100%"
                 overflow="hidden"
               >
-                <Flex
-                  direction="row"
-                  background="neutral0"
-                  padding={2}
-                  borderWidth="0 0 1px 0"
-                  borderColor="neutral150"
+                <Box
+                  display={{
+                    initial: 'none',
+                    large: 'block',
+                  }}
                 >
-                  {hasAdvancedPreview && (
-                    <IconButton
-                      variant="ghost"
-                      label={formatMessage(
-                        isSideEditorOpen
-                          ? {
-                              id: 'content-manager.preview.content.close-editor',
-                              defaultMessage: 'Close editor',
-                            }
-                          : {
-                              id: 'content-manager.preview.content.open-editor',
-                              defaultMessage: 'Open editor',
-                            }
-                      )}
-                      onClick={() => setIsSideEditorOpen((prev) => !prev)}
-                    >
-                      <AnimatedArrow $isSideEditorOpen={isSideEditorOpen} />
-                    </IconButton>
-                  )}
-                  <Flex justifyContent="center" flex={1}>
-                    <SingleSelect
-                      value={deviceName}
-                      onChange={(name) => setDeviceName(name.toString())}
-                      aria-label={formatMessage({
-                        id: 'content-manager.preview.device.select',
-                        defaultMessage: 'Select device type',
-                      })}
-                    >
-                      {DEVICES.map((deviceOption) => (
-                        <SingleSelectOption key={deviceOption.name} value={deviceOption.name}>
-                          {formatMessage(deviceOption.label)}
-                        </SingleSelectOption>
-                      ))}
-                    </SingleSelect>
+                  <Flex
+                    direction="row"
+                    background="neutral0"
+                    padding={2}
+                    borderWidth="0 0 1px 0"
+                    borderColor="neutral150"
+                  >
+                    {hasAdvancedPreview && (
+                      <IconButton
+                        variant="ghost"
+                        label={formatMessage(
+                          isSideEditorOpen
+                            ? {
+                                id: 'content-manager.preview.content.close-editor',
+                                defaultMessage: 'Close editor',
+                              }
+                            : {
+                                id: 'content-manager.preview.content.open-editor',
+                                defaultMessage: 'Open editor',
+                              }
+                        )}
+                        onClick={() => setIsSideEditorOpen((prev) => !prev)}
+                      >
+                        <AnimatedArrow $isSideEditorOpen={isSideEditorOpen} />
+                      </IconButton>
+                    )}
+                    <Flex justifyContent="center" flex={1}>
+                      <SingleSelect
+                        value={deviceName}
+                        onChange={(name) => setDeviceName(name.toString())}
+                        aria-label={formatMessage({
+                          id: 'content-manager.preview.device.select',
+                          defaultMessage: 'Select device type',
+                        })}
+                      >
+                        {DEVICES.map((deviceOption) => (
+                          <SingleSelectOption key={deviceOption.name} value={deviceOption.name}>
+                            {formatMessage(deviceOption.label)}
+                          </SingleSelectOption>
+                        ))}
+                      </SingleSelect>
+                    </Flex>
                   </Flex>
-                </Flex>
+                </Box>
+
                 <Flex direction="column" justifyContent="center" background="neutral0" flex={1}>
                   <Box
                     data-testid="preview-iframe"
@@ -438,7 +450,7 @@ const ProtectedPreviewPageImpl = () => {
         position="fixed"
         top={0}
         left={0}
-        zIndex={2}
+        zIndex={3}
         background="neutral0"
       >
         <Page.Error />
@@ -453,7 +465,7 @@ const ProtectedPreviewPageImpl = () => {
       position="fixed"
       top={0}
       left={0}
-      zIndex={2}
+      zIndex={3}
       background="neutral0"
     >
       <Page.Protect

@@ -27,6 +27,7 @@ const ActionLayout = ({ startActions, endActions }: ActionLayoutProps) => {
         medium: 6,
         large: 10,
       }}
+      gap={4}
     >
       <Flex gap={2} wrap="wrap">
         {startActions}

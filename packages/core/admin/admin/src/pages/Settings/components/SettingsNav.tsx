@@ -1,7 +1,7 @@
-import { Badge, SubNavSections, SubNavSection, SubNavLink, Flex } from '@strapi/design-system';
+import { Badge, Divider, ScrollArea } from '@strapi/design-system';
 import { Lightning } from '@strapi/icons';
 import { useIntl } from 'react-intl';
-import { useLocation, NavLink } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 import { useLicenseLimits } from '../../../../../ee/admin/src/hooks/useLicenseLimits';
@@ -27,12 +27,6 @@ const StyledBadge = styled(Badge)`
   border-radius: 50%;
   padding: ${({ theme }) => theme.spaces[2]};
   height: 2rem;
-`;
-
-const LightningIconContainer = styled.div`
-  svg > * {
-    fill: inherit;
-  }
 `;
 
 const SettingsNav = ({ menu }: SettingsNavProps) => {
@@ -82,21 +76,23 @@ const SettingsNav = ({ menu }: SettingsNavProps) => {
   };
 
   return (
-    <SubNav.Main aria-label={label} header={<SubNav.Header label={label} />}>
-      <SubNavSections>
-        {sections.map((section) => (
-          <SubNavSection key={section.id} label={formatMessage(section.intlLabel)}>
-            {section.links.map((link) => {
-              return (
-                <SubNavLink
-                  tag={NavLink}
-                  to={link.to}
-                  onClick={handleClickOnLink(link.to)}
-                  key={link.id}
-                  endAction={
-                    <Flex alignItems="center" gap={1}>
-                      {link?.licenseOnly && (
-                        <LightningIconContainer>
+    <SubNav.Main aria-label={label}>
+      <SubNav.Header label={label} />
+      <Divider />
+      <ScrollArea>
+        <SubNav.Sections>
+          {sections.map((section) => (
+            <SubNav.Section key={section.id} label={formatMessage(section.intlLabel)}>
+              {section.links.map((link) => {
+                return (
+                  <SubNav.Link
+                    to={link.to}
+                    onClick={handleClickOnLink(link.to)}
+                    key={link.id}
+                    label={formatMessage(link.intlLabel)}
+                    endAction={
+                      <>
+                        {link?.licenseOnly && (
                           <Lightning
                             fill={
                               (availableFeatureNames || []).includes(
@@ -108,27 +104,27 @@ const SettingsNav = ({ menu }: SettingsNavProps) => {
                             width="1.5rem"
                             height="1.5rem"
                           />
-                        </LightningIconContainer>
-                      )}
-                      {link?.hasNotification && (
-                        <StyledBadge
-                          aria-label="Notification"
-                          backgroundColor="primary600"
-                          textColor="neutral0"
-                        >
-                          1
-                        </StyledBadge>
-                      )}
-                    </Flex>
-                  }
-                >
-                  {formatMessage(link.intlLabel)}
-                </SubNavLink>
-              );
-            })}
-          </SubNavSection>
-        ))}
-      </SubNavSections>
+                        )}
+                        {link?.hasNotification && (
+                          <StyledBadge
+                            aria-label="Notification"
+                            backgroundColor="primary600"
+                            textColor="neutral0"
+                          >
+                            1
+                          </StyledBadge>
+                        )}
+                      </>
+                    }
+                  >
+                    {formatMessage(link.intlLabel)}
+                  </SubNav.Link>
+                );
+              })}
+            </SubNav.Section>
+          ))}
+        </SubNav.Sections>
+      </ScrollArea>
     </SubNav.Main>
   );
 };

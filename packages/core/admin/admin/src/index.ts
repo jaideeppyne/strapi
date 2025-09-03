@@ -10,6 +10,7 @@ export * from './render';
  * components
  */
 export { BackButton, type BackButtonProps } from './features/BackButton';
+export * from './components/Breadcrumb';
 export * from './components/ConfirmDialog';
 export * from './components/Context';
 export * from './components/DescriptionComponentRenderer';
@@ -52,6 +53,7 @@ export { useHistory } from './features/BackButton';
  */
 export { useInjectReducer } from './hooks/useInjectReducer';
 export { useAPIErrorHandler } from './hooks/useAPIErrorHandler';
+export { useBreadcrumb } from './hooks/useBreadcrumb';
 export { useQueryParams } from './hooks/useQueryParams';
 export { useFetchClient } from './hooks/useFetchClient';
 export { useFocusInputField } from './hooks/useFocusInputField';

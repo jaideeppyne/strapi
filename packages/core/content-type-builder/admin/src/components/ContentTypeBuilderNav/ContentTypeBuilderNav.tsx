@@ -10,15 +10,11 @@ import {
   Menu,
   VisuallyHidden,
   Dialog,
-  IconButton,
-  SubNavSections,
-  SubNavSection,
-  SubNavLink,
-  SubNavLinkSection,
+  ScrollArea,
+  Divider,
 } from '@strapi/design-system';
-import { ArrowClockwise, Cross, More, Plus } from '@strapi/icons';
+import { ArrowClockwise, Cross, More } from '@strapi/icons';
 import { useIntl } from 'react-intl';
-import { NavLink } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 import { getTrad } from '../../utils/getTrad';
@@ -125,190 +121,175 @@ export const ContentTypeBuilderNav = () => {
   });
 
   return (
-    <SubNav.Main aria-label={pluginName} header={<SubNav.Header label={pluginName} />}>
-      <Flex
-        paddingTop={5}
-        paddingBottom={1}
-        paddingLeft={5}
-        paddingRight={5}
-        gap={3}
-        direction={'column'}
-        alignItems={'stretch'}
-      >
-        <tours.contentTypeBuilder.Save>
-          <Flex gap={2}>
-            <Button
-              flex={1}
-              onClick={(e) => {
-                e.preventDefault();
-                saveSchema();
-              }}
-              type="submit"
-              disabled={!isModified || !isInDevelopmentMode}
-              fullWidth
-              size="S"
-            >
-              {formatMessage({
-                id: 'global.save',
-                defaultMessage: 'Save',
-              })}
-            </Button>
-            <Menu.Root open={menuIsOpen} onOpenChange={setMenuIsOpen}>
-              <Menu.Trigger
+    <SubNav.Main aria-label={pluginName}>
+      <SubNav.Header label={pluginName} />
+      <Divider />
+      <ScrollArea>
+        <Flex padding={5} paddingBottom={0} gap={3} direction="column" alignItems="stretch">
+          <tours.contentTypeBuilder.Save>
+            <Flex gap={2}>
+              <Button
+                flex={1}
+                onClick={(e) => {
+                  e.preventDefault();
+                  saveSchema();
+                }}
+                type="submit"
+                disabled={!isModified || !isInDevelopmentMode}
+                fullWidth
                 size="S"
-                endIcon={null}
-                paddingTop="4px"
-                paddingLeft="7px"
-                paddingRight="7px"
-                variant="tertiary"
               >
-                <More fill="neutral500" aria-hidden focusable={false} />
-                <VisuallyHidden tag="span">
-                  {formatMessage({
-                    id: 'global.more.actions',
-                    defaultMessage: 'More actions',
-                  })}
-                </VisuallyHidden>
-              </Menu.Trigger>
-              <Menu.Content zIndex={1}>
-                <Menu.Item
-                  disabled={!history.canUndo || !isInDevelopmentMode}
-                  onSelect={undoHandler}
-                  startIcon={<ArrowCounterClockwise />}
-                >
-                  {formatMessage({
-                    id: 'global.last-change.undo',
-                    defaultMessage: 'Undo last change',
-                  })}
-                </Menu.Item>
-                <Menu.Item
-                  disabled={!history.canRedo || !isInDevelopmentMode}
-                  onSelect={redoHandler}
-                  startIcon={<ArrowClockwise />}
-                >
-                  {formatMessage({
-                    id: 'global.last-change.redo',
-                    defaultMessage: 'Redo last change',
-                  })}
-                </Menu.Item>
-                <Menu.Separator />
-                <DiscardAllMenuItem
-                  disabled={!history.canDiscardAll || !isInDevelopmentMode}
-                  onSelect={discardHandler}
-                >
-                  <Flex gap={2}>
-                    <Cross />
-                    <Typography>
-                      {formatMessage({
-                        id: 'global.last-changes.discard',
-                        defaultMessage: 'Discard last changes',
-                      })}
-                    </Typography>
-                  </Flex>
-                </DiscardAllMenuItem>
-              </Menu.Content>
-            </Menu.Root>
-          </Flex>
-        </tours.contentTypeBuilder.Save>
-
-        <Searchbar
-          value={search.value}
-          onChange={(e) => search.onChange(e.target.value)}
-          onClear={() => search.onChange('')}
-          placeholder={formatMessage({
-            id: getTrad('search.placeholder'),
-            defaultMessage: 'Search',
-          })}
-          size="S"
-          // eslint-disable-next-line react/no-children-prop
-          children={undefined}
-          name={'search_contentType'}
-          clearLabel={formatMessage({ id: 'clearLabel', defaultMessage: 'Clear' })}
-          aria-label={formatMessage({
-            id: getTrad('search.placeholder'),
-            defaultMessage: 'Search',
-          })}
-        />
-      </Flex>
-      <SubNavSections>
-        {menu.map((section) => (
-          <Fragment key={section.name}>
-            <GuidedTourTooltip sectionId={section.name}>
-              <SubNavSection
-                label={formatMessage({
-                  id: section.title.id,
-                  defaultMessage: section.title.defaultMessage,
+                {formatMessage({
+                  id: 'global.save',
+                  defaultMessage: 'Save',
                 })}
-                badgeLabel={section.linksCount ? section.linksCount.toString() : undefined}
-                additionalAction={
-                  section.customLink && (
-                    <IconButton
-                      label={formatMessage({
-                        id: section.customLink.id,
-                        defaultMessage: section.customLink.defaultMessage,
-                      })}
-                      variant="ghost"
-                      withTooltip
-                      onClick={section.customLink.onClick}
-                      size="XS"
-                    >
-                      <Plus />
-                    </IconButton>
-                  )
-                }
-              >
-                {section.links.map((link) => {
-                  const linkLabel = formatMessage({ id: link.name, defaultMessage: link.title });
-
-                  if ('links' in link) {
-                    return (
-                      <SubNavLinkSection key={link.name} label={linkLabel}>
-                        {link.links.map((subLink: any) => {
-                          const label = formatMessage({
-                            id: subLink.name,
-                            defaultMessage: subLink.title,
-                          });
-
-                          return (
-                            <SubNavLink
-                              tag={NavLink}
-                              key={link.name}
-                              to={subLink.to}
-                              endAction={
-                                <Box tag="span" textAlign="center" width={'24px'}>
-                                  <Status status={subLink.status} />
-                                </Box>
-                              }
-                              isSubSectionChild
-                            >
-                              {label}
-                            </SubNavLink>
-                          );
+              </Button>
+              <Menu.Root open={menuIsOpen} onOpenChange={setMenuIsOpen}>
+                <Menu.Trigger
+                  size="S"
+                  endIcon={null}
+                  paddingTop="4px"
+                  paddingLeft="7px"
+                  paddingRight="7px"
+                  variant="tertiary"
+                >
+                  <More fill="neutral500" aria-hidden focusable={false} />
+                  <VisuallyHidden tag="span">
+                    {formatMessage({
+                      id: 'global.more.actions',
+                      defaultMessage: 'More actions',
+                    })}
+                  </VisuallyHidden>
+                </Menu.Trigger>
+                <Menu.Content zIndex={1}>
+                  <Menu.Item
+                    disabled={!history.canUndo || !isInDevelopmentMode}
+                    onSelect={undoHandler}
+                    startIcon={<ArrowCounterClockwise />}
+                  >
+                    {formatMessage({
+                      id: 'global.last-change.undo',
+                      defaultMessage: 'Undo last change',
+                    })}
+                  </Menu.Item>
+                  <Menu.Item
+                    disabled={!history.canRedo || !isInDevelopmentMode}
+                    onSelect={redoHandler}
+                    startIcon={<ArrowClockwise />}
+                  >
+                    {formatMessage({
+                      id: 'global.last-change.redo',
+                      defaultMessage: 'Redo last change',
+                    })}
+                  </Menu.Item>
+                  <Menu.Separator />
+                  <DiscardAllMenuItem
+                    disabled={!history.canDiscardAll || !isInDevelopmentMode}
+                    onSelect={discardHandler}
+                  >
+                    <Flex gap={2}>
+                      <Cross />
+                      <Typography>
+                        {formatMessage({
+                          id: 'global.last-changes.discard',
+                          defaultMessage: 'Discard last changes',
                         })}
-                      </SubNavLinkSection>
-                    );
-                  }
+                      </Typography>
+                    </Flex>
+                  </DiscardAllMenuItem>
+                </Menu.Content>
+              </Menu.Root>
+            </Flex>
+          </tours.contentTypeBuilder.Save>
 
-                  return (
-                    <SubNavLink
-                      tag={NavLink}
-                      to={link.to}
-                      key={link.name}
-                      endAction={
-                        <Box tag="span" textAlign="center" width={'24px'}>
-                          <Status status={link.status} />
-                        </Box>
-                      }
-                    >
-                      {linkLabel}
-                    </SubNavLink>
-                  );
-                })}
-              </SubNavSection>
-            </GuidedTourTooltip>
-          </Fragment>
-        ))}
-      </SubNavSections>
+          <Searchbar
+            value={search.value}
+            onChange={(e) => search.onChange(e.target.value)}
+            onClear={() => search.onChange('')}
+            placeholder={formatMessage({
+              id: getTrad('search.placeholder'),
+              defaultMessage: 'Search',
+            })}
+            size="S"
+            // eslint-disable-next-line react/no-children-prop
+            children={undefined}
+            name={'search_contentType'}
+            clearLabel={formatMessage({ id: 'clearLabel', defaultMessage: 'Clear' })}
+            aria-label={formatMessage({
+              id: getTrad('search.placeholder'),
+              defaultMessage: 'Search',
+            })}
+          />
+        </Flex>
+        <SubNav.Sections>
+          {menu.map((section) => (
+            <Fragment key={section.name}>
+              <GuidedTourTooltip sectionId={section.name}>
+                <SubNav.Section
+                  label={formatMessage({
+                    id: section.title.id,
+                    defaultMessage: section.title.defaultMessage,
+                  })}
+                  badgeLabel={section.linksCount ? section.linksCount.toString() : undefined}
+                  link={
+                    section.customLink && {
+                      label: formatMessage({
+                        id: section.customLink?.id,
+                        defaultMessage: section.customLink?.defaultMessage,
+                      }),
+                      onClick: section.customLink?.onClick,
+                    }
+                  }
+                  sectionId={section.name}
+                >
+                  {section.links.map((link) => {
+                    const linkLabel = formatMessage({ id: link.name, defaultMessage: link.title });
+
+                    if ('links' in link) {
+                      return (
+                        <SubNav.SubSection key={link.name} label={linkLabel}>
+                          {link.links.map((subLink: any) => {
+                            const label = formatMessage({
+                              id: subLink.name,
+                              defaultMessage: subLink.title,
+                            });
+
+                            return (
+                              <SubNav.Link
+                                key={link.name}
+                                to={subLink.to}
+                                label={label}
+                                endAction={
+                                  <Box tag="span" textAlign="center" width={'24px'}>
+                                    <Status status={subLink.status} />
+                                  </Box>
+                                }
+                              />
+                            );
+                          })}
+                        </SubNav.SubSection>
+                      );
+                    }
+
+                    return (
+                      <SubNav.Link
+                        to={link.to}
+                        key={link.name}
+                        label={linkLabel}
+                        endAction={
+                          <Box tag="span" textAlign="center" width="24px">
+                            <Status status={link.status} />
+                          </Box>
+                        }
+                      />
+                    );
+                  })}
+                </SubNav.Section>
+              </GuidedTourTooltip>
+            </Fragment>
+          ))}
+        </SubNav.Sections>
+      </ScrollArea>
       <Dialog.Root
         open={discardConfirmationModalIsOpen}
         onOpenChange={setDiscardConfirmationModalIsOpen}

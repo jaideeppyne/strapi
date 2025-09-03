@@ -1,5 +1,14 @@
 import { useTracking, Widget } from '@strapi/admin/strapi-admin';
-import { Box, IconButton, Table, Tbody, Td, Tr, Typography } from '@strapi/design-system';
+import {
+  Box,
+  IconButton,
+  ScrollArea,
+  Table,
+  Tbody,
+  Td,
+  Tr,
+  Typography,
+} from '@strapi/design-system';
 import { Eye } from '@strapi/icons';
 import { useIntl } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
@@ -36,60 +45,62 @@ const LastActivityTable = ({ items }: { items: AuditLog[] }) => {
   };
 
   return (
-    <Table colCount={4} rowCount={items?.length ?? 0}>
-      <Tbody>
-        {items?.map((item) => {
-          const action = formatMessage(
-            {
-              id: `Settings.permissions.auditLogs.${item.action}`,
-              // @ts-expect-error – getDefaultMessage probably doesn't benefit from being so strongly typed unless we just add string at the end.
-              defaultMessage: getDefaultMessage(item.action),
-            },
-            { model: (item.payload.model as string) ?? '' }
-          );
-          const userDisplayName = item.user?.displayName ?? '-';
-          return (
-            <Tr
-              onClick={handleRowClick(item)}
-              cursor="pointer"
-              key={`lastActivity_auditLog_${item.id}`}
-            >
-              <Td>
-                <Typography title={action} variant="omega" textColor="neutral800">
-                  {action}
-                </Typography>
-              </Td>
-              <Td>
-                <Typography variant="omega" textColor="neutral800">
-                  <RelativeTime timestamp={new Date(item.date)} />
-                </Typography>
-              </Td>
-              <Td>
-                <Typography title={userDisplayName} variant="omega" textColor="neutral800">
-                  {userDisplayName}
-                </Typography>
-              </Td>
-              <Td onClick={(e) => e.stopPropagation()}>
-                <Box display="inline-block">
-                  <IconButton
-                    tag={Link}
-                    to={getAuditLogDetailsLink(item)}
-                    onClick={() => trackUsage('willOpenAuditLogDetailsFromHome')}
-                    label={formatMessage({
-                      id: 'global.details',
-                      defaultMessage: 'Details',
-                    })}
-                    variant="ghost"
-                  >
-                    <Eye />
-                  </IconButton>
-                </Box>
-              </Td>
-            </Tr>
-          );
-        })}
-      </Tbody>
-    </Table>
+    <ScrollArea>
+      <Table colCount={4} rowCount={items?.length ?? 0}>
+        <Tbody>
+          {items?.map((item) => {
+            const action = formatMessage(
+              {
+                id: `Settings.permissions.auditLogs.${item.action}`,
+                // @ts-expect-error – getDefaultMessage probably doesn't benefit from being so strongly typed unless we just add string at the end.
+                defaultMessage: getDefaultMessage(item.action),
+              },
+              { model: (item.payload.model as string) ?? '' }
+            );
+            const userDisplayName = item.user?.displayName ?? '-';
+            return (
+              <Tr
+                onClick={handleRowClick(item)}
+                cursor="pointer"
+                key={`lastActivity_auditLog_${item.id}`}
+              >
+                <Td>
+                  <Typography title={action} variant="omega" textColor="neutral800">
+                    {action}
+                  </Typography>
+                </Td>
+                <Td>
+                  <Typography variant="omega" textColor="neutral800">
+                    <RelativeTime timestamp={new Date(item.date)} />
+                  </Typography>
+                </Td>
+                <Td>
+                  <Typography title={userDisplayName} variant="omega" textColor="neutral800">
+                    {userDisplayName}
+                  </Typography>
+                </Td>
+                <Td onClick={(e) => e.stopPropagation()}>
+                  <Box display="inline-block">
+                    <IconButton
+                      tag={Link}
+                      to={getAuditLogDetailsLink(item)}
+                      onClick={() => trackUsage('willOpenAuditLogDetailsFromHome')}
+                      label={formatMessage({
+                        id: 'global.details',
+                        defaultMessage: 'Details',
+                      })}
+                      variant="ghost"
+                    >
+                      <Eye />
+                    </IconButton>
+                  </Box>
+                </Td>
+              </Tr>
+            );
+          })}
+        </Tbody>
+      </Table>
+    </ScrollArea>
   );
 };
 

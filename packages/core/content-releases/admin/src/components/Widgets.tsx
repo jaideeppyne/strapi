@@ -1,5 +1,15 @@
 import { useTracking, Widget } from '@strapi/admin/strapi-admin';
-import { Badge, Box, IconButton, Table, Tbody, Td, Tr, Typography } from '@strapi/design-system';
+import {
+  Badge,
+  Box,
+  IconButton,
+  ScrollArea,
+  Table,
+  Tbody,
+  Td,
+  Tr,
+  Typography,
+} from '@strapi/design-system';
 import { Pencil } from '@strapi/icons';
 import { useIntl } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
@@ -35,58 +45,60 @@ const ReleasesTable = ({ items }: { items: Release[] }) => {
   };
 
   return (
-    <Table colCount={4} rowCount={items?.length ?? 0}>
-      <Tbody>
-        {items?.map((item) => (
-          <Tr onClick={handleRowClick(item)} cursor="pointer" key={item.documentId}>
-            <Td>
-              <CellTypography title={item.name} variant="omega" textColor="neutral800">
-                {item.name}
-              </CellTypography>
-            </Td>
-            <Td>
-              <Box display="inline-block">
-                {item.status ? (
-                  <Badge {...getBadgeProps(item.status)}>{item.status}</Badge>
-                ) : (
-                  <Typography textColor="neutral600" aria-hidden>
-                    -
-                  </Typography>
-                )}
-              </Box>
-            </Td>
-            <Td>
-              <Typography variant="omega" textTransform="capitalize" textColor="neutral600">
-                {item.scheduledAt ? (
-                  <RelativeTime timestamp={new Date(item.scheduledAt)} />
-                ) : (
-                  formatMessage({
-                    id: 'content-releases.pages.Releases.not-scheduled',
-                    defaultMessage: 'Not scheduled',
-                  })
-                )}
-              </Typography>
-            </Td>
-            <Td onClick={(e) => e.stopPropagation()}>
-              <Box display="inline-block">
-                <IconButton
-                  tag={Link}
-                  to={getEditViewLink(item)}
-                  onClick={() => trackUsage('willEditReleaseFromHome')}
-                  label={formatMessage({
-                    id: 'content-manager.actions.edit.label',
-                    defaultMessage: 'Edit',
-                  })}
-                  variant="ghost"
-                >
-                  <Pencil />
-                </IconButton>
-              </Box>
-            </Td>
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
+    <ScrollArea>
+      <Table colCount={4} rowCount={items?.length ?? 0}>
+        <Tbody>
+          {items?.map((item) => (
+            <Tr onClick={handleRowClick(item)} cursor="pointer" key={item.documentId}>
+              <Td>
+                <CellTypography title={item.name} variant="omega" textColor="neutral800">
+                  {item.name}
+                </CellTypography>
+              </Td>
+              <Td>
+                <Box display="inline-block">
+                  {item.status ? (
+                    <Badge {...getBadgeProps(item.status)}>{item.status}</Badge>
+                  ) : (
+                    <Typography textColor="neutral600" aria-hidden>
+                      -
+                    </Typography>
+                  )}
+                </Box>
+              </Td>
+              <Td>
+                <Typography variant="omega" textTransform="capitalize" textColor="neutral600">
+                  {item.scheduledAt ? (
+                    <RelativeTime timestamp={new Date(item.scheduledAt)} />
+                  ) : (
+                    formatMessage({
+                      id: 'content-releases.pages.Releases.not-scheduled',
+                      defaultMessage: 'Not scheduled',
+                    })
+                  )}
+                </Typography>
+              </Td>
+              <Td onClick={(e) => e.stopPropagation()}>
+                <Box display="inline-block">
+                  <IconButton
+                    tag={Link}
+                    to={getEditViewLink(item)}
+                    onClick={() => trackUsage('willEditReleaseFromHome')}
+                    label={formatMessage({
+                      id: 'content-manager.actions.edit.label',
+                      defaultMessage: 'Edit',
+                    })}
+                    variant="ghost"
+                  >
+                    <Pencil />
+                  </IconButton>
+                </Box>
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </ScrollArea>
   );
 };
 
