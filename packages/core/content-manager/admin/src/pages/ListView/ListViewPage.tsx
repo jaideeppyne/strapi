@@ -11,7 +11,7 @@ import {
   useTracking,
   useAPIErrorHandler,
   useQueryParams,
-  usePersistentState,
+  useScopedPersistentState,
   useRBAC,
   Layouts,
   useTable,
@@ -80,7 +80,7 @@ const ListViewPage = () => {
   const { collectionType, model, schema } = useDoc();
   const { list } = useDocumentLayout(model);
 
-  const [displayedHeaders, setDisplayedHeaders] = usePersistentState<ListFieldLayout[]>(
+  const [displayedHeaders, setDisplayedHeaders] = useScopedPersistentState<ListFieldLayout[]>(
     `STRAPI_LIST_VIEW_DISPLAY_HEADERS:${model}`,
     []
   );
