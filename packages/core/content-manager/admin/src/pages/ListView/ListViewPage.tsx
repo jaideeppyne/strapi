@@ -99,6 +99,19 @@ const ListViewPage = () => {
     }
   }, [list.layout]);
 
+  React.useEffect(() => {
+    if (!schema?.attributes) return;
+    if (displayedHeaders.length === 0) return;
+    if (schema.uid !== model) return;
+
+    const allowedDisplayHeaders = displayedHeaders
+      .filter((header) => Object.keys(schema?.attributes).includes(header.name));
+
+    if (allowedDisplayHeaders.length !== displayedHeaders.length) {
+      setDisplayedHeaders(allowedDisplayHeaders);
+    }
+  }, [displayedHeaders]);
+
   const handleSetHeaders = (headers: string[]) => {
     setDisplayedHeaders(
       convertListLayoutToFieldLayouts(headers, schema!.attributes, list.metadatas)
