@@ -1,0 +1,7 @@
+{
+  "name": "audit-logs",
+  "version": "1.0.0",
+  "private": true,
+  "strapi": { "name": "audit-logs", "type": "plugin" },
+  "main": "strapi-server.js"
+}

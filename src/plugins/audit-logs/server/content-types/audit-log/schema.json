@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "audit_logs",
+  "info": {
+    "singularName": "audit-log",
+    "pluralName": "audit-logs",
+    "displayName": "Audit Log",
+    "description": "Automated audit logs for Content API changes"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "contentType": { "type": "string", "required": true, "index": true },
+    "recordId": { "type": "integer", "index": true },
+    "action": { "type": "enumeration", "enum": ["create", "update", "delete"], "required": true, "index": true },
+    "timestamp": { "type": "datetime", "required": true, "index": true },
+    "userId": { "type": "integer", "index": true },
+    "username": { "type": "string" },
+    "changedFields": { "type": "json" },
+    "diff": { "type": "json" },
+    "payload": { "type": "json" }
+  }
+}
