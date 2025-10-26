@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = {
+module.exports = () => ({
   controllers: {
     auditLog: require('./controllers/audit-log'),
   },
@@ -10,4 +10,5 @@ module.exports = {
   policies: {
     'can-read-audit-logs': require('./policies/can-read-audit-logs'),
   },
-};
+  contentTypes: require('./content-types'),
+});

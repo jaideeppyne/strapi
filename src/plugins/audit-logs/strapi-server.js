@@ -1,11 +1,18 @@
 'use strict';
 
-module.exports = {
-  register({ strapi }) {
-    // nothing to do at register-time
-  },
+const plugin = require('./server');
 
-  bootstrap({ strapi }) {
+module.exports = () => {
+  const pluginAPI = plugin();
+
+  return {
+    ...pluginAPI,
+
+    register({ strapi }) {
+      // nothing to do at register-time for now
+    },
+
+    bootstrap({ strapi }) {
     strapi.log.info('[audit-logs] bootstrap starting');
     strapi.log.info('[audit-logs] plugin base URL should be /api/audit-logs');
     const getCfg = () =>
@@ -15,6 +22,7 @@ module.exports = {
     if (!cfg.enabled) return;
 
     // Subscribe to all model lifecycles
+    strapi.log.info('[audit-logs] registering lifecycle subscription');
     strapi.db.lifecycles.subscribe({
       models: ['*'],
 
@@ -48,6 +56,7 @@ module.exports = {
     });
 
     async function logChange(action, event) {
+      strapi.log.info(`[audit-logs][debug] attempting to log ${action}`);
       const cfg = getCfg();
       if (!cfg.enabled) return;
 
@@ -132,5 +141,6 @@ module.exports = {
       for (const k of keys) out[k] = obj?.[k];
       return out;
     }
-  },
+    },
+  };
 };
