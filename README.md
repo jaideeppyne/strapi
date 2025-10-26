@@ -6,9 +6,10 @@ This project embeds a custom `audit-logs` plugin that writes an audit entry for 
 
 - **Captured fields**: content type UID, record id, action, timestamp, user id/name, changed fields, plus payload/diff snapshots depending on the action.
 - **Lifecycle hook**: a global `strapi.db.lifecycles.subscribe` listener inspects each ORM mutation that originates from an HTTP request and persists the audit record in the `audit_logs` table.
+- **Deletion snapshots**: delete events store a sanitized copy of the record that was removed so investigators can review the final state.
 - **Configuration**: `config/plugins.ts` controls `auditLog.enabled` and `auditLog.excludeContentTypes` so you can disable logging entirely or skip sensitive models.
 - **API**: `GET /api/audit-logs` supports filtering by content type, user id, action, date range (`filters[dateFrom]` / `filters[dateTo]`), pagination (`pagination[page]`, `pagination[pageSize]`), and sorting via `sort=<field>:<order>`.
-- **Security**: access requires the `read_audit_logs` permission enforced by the `plugin::audit-logs.can-read-audit-logs` policy. Grant this permission directly on the user or through any role that exposes `read_audit_logs` in its permission list/flags.
+- **Security**: access requires the `read_audit_logs` permission enforced by the `plugin::audit-logs.can-read-audit-logs` policy. Grant this permission to a role from *Settings → Users & Permissions → Roles → (role) → Audit Logs → read_audit_logs* or override it per-user via a `read_audit_logs: true` flag.
 
 Example configuration (`config/plugins.ts`):
 
@@ -33,6 +34,8 @@ Example request:
 GET /api/audit-logs?filters[contentType][$in]=api::article.article&filters[action][$in]=update&filters[dateFrom]=2024-01-01&pagination[page]=1&pagination[pageSize]=25&sort=timestamp:desc
 Authorization: Bearer <token with read_audit_logs permission>
 ```
+
+If you receive `Missing permission: read_audit_logs`, revisit the role settings above and toggle the `read_audit_logs` action for the appropriate role(s).
 
 Responses follow the standard Strapi `{ data, meta.pagination }` envelope. For deeper architectural details see `DESIGN_NOTE.md`.
 

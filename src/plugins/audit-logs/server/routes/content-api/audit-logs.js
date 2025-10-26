@@ -4,10 +4,9 @@ module.exports = [
   {
     method: 'GET',
     path: '/',
-    handler: 'auditLog.find',
+    handler: 'auditLog.read_audit_logs',
     config: {
       policies: ['plugin::audit-logs.can-read-audit-logs'],
-      auth: false, // policy will enforce permission
     },
   },
 ];
